@@ -1,0 +1,21 @@
+{
+  "updatedAt": "2025-12-01",
+  "supporters": [
+    {
+      "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "type": "token",
+      "chainId": 1,
+      "name": "USD Coin (USDC)",
+      "startedAt": "2025-01-01",
+      "currentTier": 2,
+      "expiresAt": "2026-01-01",
+      "history": [
+        {
+          "tier": 2,
+          "from": "2025-01-01",
+          "to": "2026-01-01"
+        }
+      ]
+    }
+  ]
+}

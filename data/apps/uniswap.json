@@ -1,0 +1,33 @@
+{
+  "id": "uniswap",
+  "name": "Uniswap",
+  "type": "dapp",
+  "description": "Decentralized trading protocol for automated liquidity provision",
+  "verified": true,
+  "contracts": [
+    {
+      "chainId": 1,
+      "address": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+      "label": "SwapRouter02"
+    },
+    {
+      "chainId": 1,
+      "address": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
+      "label": "UniswapV3Factory"
+    },
+    {
+      "chainId": 42161,
+      "address": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+      "label": "SwapRouter02"
+    }
+  ],
+  "networks": [1, 42161, 10, 137, 8453],
+  "links": [
+    { "name": "Website", "url": "https://uniswap.org", "description": "Official Uniswap website" },
+    { "name": "App", "url": "https://app.uniswap.org", "description": "Uniswap web app" },
+    { "name": "Docs", "url": "https://docs.uniswap.org", "description": "Developer documentation" },
+    { "name": "GitHub", "url": "https://github.com/Uniswap", "description": "Uniswap GitHub" },
+    { "name": "Twitter", "url": "https://twitter.com/Uniswap", "description": "Uniswap Twitter" }
+  ],
+  "tags": ["defi", "dex", "amm"]
+}
