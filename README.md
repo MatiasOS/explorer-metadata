@@ -274,23 +274,23 @@ Tiers are represented as integers:
 ### Tokens
 - **Free**: Basic listing with address, name, symbol, decimals (verified contract required)
 - **Backer** ($500/mo): + Logo, links, project info, tags, allow events submission
-- **Partner** ($1,500/mo): + Balance shown in explorer, markdown profile, voting power
-- **Ally** ($3,000/mo): + DAO token allocation, custom explorer subdomain
+- **Partner** ($1,500/mo): + Balance shown in explorer, markdown profile 
+- **Ally** ($3,000/mo): + Roadmap voting power, custom explorer subdomain
 
 ### Networks - Backer $2,000/month
 - **Backer** ($2,000/mo): Profile page, priority home page placement
-- **Partner** ($6,000/mo): + Dedicated subdomain explorer, roadmap voting power
-- **Ally** ($12,000/mo): + DAO token allocation, network-specific features
+- **Partner** ($6,000/mo): + Custom subdomain explorer
+- **Ally** ($12,000/mo): + Roadmap voting power, network-specific features
 
 ### Apps - Backer $1,000/month
 - **Backer** ($1,000/mo): Profile page, contract tagging, allow events submission
-- **Partner** ($3,000/mo): + Direct tech support, roadmap voting power
-- **Ally** ($6,000/mo): + DAO token allocation, plugin integration
+- **Partner** ($3,000/mo): + Custom subdomain explorer 
+- **Ally** ($6,000/mo): + roadmap voting power, plugin integration
 
 ### Organizations - Backer $500/month
 - **Backer** ($500/mo): Profile page, contract tagging, allow events submission
-- **Partner** ($1,500/mo): + Direct tech support, roadmap voting power
-- **Ally** ($3,000/mo): + DAO token allocation
+- **Partner** ($1,500/mo): + + Custom subdomain explorer, direct tech support
+- **Ally** ($3,000/mo): + Roadmap voting power
 
 ## Donations
 
