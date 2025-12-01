@@ -11,7 +11,8 @@ explorer-metadata/
 ├── data/
 │   ├── tokens/{chainId}/{address}.json    # Token metadata
 │   ├── addresses/{chainId}/{address}.json # Verified addresses per chain
-│   ├── events/{chainId}.json              # Chain-specific events
+│   ├── events/{chainId}/common.json       # Common events (ERC20, etc.)
+│   ├── events/{chainId}/{address}.json    # Address-specific events
 │   ├── networks.json                      # All networks
 │   ├── apps/{id}.json                     # App metadata
 │   ├── organizations.json                 # All organizations
@@ -209,7 +210,11 @@ Tokens support **free listings** and **paid subscriptions**:
 
 ### Event
 
-Events are stored per chain in `data/events/{chainId}.json`. Each event is indexed by its topic0 (keccak256 hash of the event signature).
+Events are stored per chain with common events in `data/events/{chainId}/common.json` and address-specific events in `data/events/{chainId}/{address}.json`.
+
+#### Common Events (common.json)
+
+Standard events like ERC20 Transfer, Approval, etc:
 
 ```json
 {
@@ -220,10 +225,23 @@ Events are stored per chain in `data/events/{chainId}.json`. Each event is index
   "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925": {
     "event": "Approval(address,address,uint256)",
     "description": "ERC20/ERC721 approval granted."
+  }
+}
+```
+
+#### Address-Specific Events ({address}.json)
+
+Custom events for specific contracts (e.g., Uniswap V2 Router):
+
+```json
+{
+  "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822": {
+    "event": "Swap(address,uint256,uint256,uint256,uint256,address)",
+    "description": "Token swap executed."
   },
-  "0x2f8788117e7af2f4c44cc979f409775888b8597f5b8bfeb3c5c50411c276d0b3": {
-    "event": "RoleGranted(bytes32,address,address)",
-    "description": "AccessControl role granted."
+  "0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f": {
+    "event": "Mint(address,uint256,uint256)",
+    "description": "Liquidity added to pool."
   }
 }
 ```

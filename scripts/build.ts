@@ -128,36 +128,67 @@ function buildEvents(): number {
 
   if (!fs.existsSync(eventsDir)) return totalEvents;
 
-  const eventFiles = fs.readdirSync(eventsDir, { withFileTypes: true });
+  const chainDirs = fs.readdirSync(eventsDir, { withFileTypes: true });
 
-  for (const eventFile of eventFiles) {
-    if (!eventFile.isFile() || !eventFile.name.endsWith(".json")) continue;
+  for (const chainDir of chainDirs) {
+    if (!chainDir.isDirectory()) continue;
 
-    const chainId = parseInt(eventFile.name.replace(".json", ""), 10);
+    const chainId = parseInt(chainDir.name, 10);
     if (isNaN(chainId)) continue;
 
-    const filePath = path.join(eventsDir, eventFile.name);
-    try {
-      const events = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-      const eventCount = Object.keys(events).length;
+    const chainPath = path.join(eventsDir, chainDir.name);
+    const eventFiles = fs.readdirSync(chainPath, { withFileTypes: true });
 
-      const output = {
-        chainId,
-        updatedAt: new Date().toISOString(),
-        count: eventCount,
-        events,
-      };
-
-      fs.writeFileSync(
-        path.join(distEventsDir, `${chainId}.json`),
-        JSON.stringify(output, null, 2)
-      );
-
-      totalEvents += eventCount;
-      console.log(`  Built events/${chainId}.json (${eventCount} events)`);
-    } catch (e) {
-      console.warn(`Warning: Failed to parse ${filePath}: ${e}`);
+    // Load common events
+    let commonEvents: Record<string, unknown> = {};
+    const commonPath = path.join(chainPath, "common.json");
+    if (fs.existsSync(commonPath)) {
+      try {
+        commonEvents = JSON.parse(fs.readFileSync(commonPath, "utf-8"));
+      } catch (e) {
+        console.warn(`Warning: Failed to parse ${commonPath}: ${e}`);
+      }
     }
+
+    // Load address-specific events
+    const addressEvents: Record<string, Record<string, unknown>> = {};
+    for (const eventFile of eventFiles) {
+      if (!eventFile.isFile() || !eventFile.name.endsWith(".json")) continue;
+      if (eventFile.name === "common.json") continue;
+
+      const address = eventFile.name.replace(".json", "");
+      const filePath = path.join(chainPath, eventFile.name);
+      try {
+        addressEvents[address] = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+      } catch (e) {
+        console.warn(`Warning: Failed to parse ${filePath}: ${e}`);
+      }
+    }
+
+    const commonCount = Object.keys(commonEvents).length;
+    const addressCount = Object.values(addressEvents).reduce(
+      (sum, events) => sum + Object.keys(events).length,
+      0
+    );
+    const eventCount = commonCount + addressCount;
+
+    if (eventCount === 0) continue;
+
+    const output = {
+      chainId,
+      updatedAt: new Date().toISOString(),
+      count: eventCount,
+      common: commonEvents,
+      addresses: addressEvents,
+    };
+
+    fs.writeFileSync(
+      path.join(distEventsDir, `${chainId}.json`),
+      JSON.stringify(output, null, 2)
+    );
+
+    totalEvents += eventCount;
+    console.log(`  Built events/${chainId}.json (${commonCount} common, ${Object.keys(addressEvents).length} addresses, ${eventCount} total)`);
   }
 
   return totalEvents;

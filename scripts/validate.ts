@@ -388,52 +388,59 @@ checkDuplicates();
 // Validate events files
 const eventsDir = path.join(ROOT_DIR, "data/events");
 if (fs.existsSync(eventsDir)) {
-  const eventFiles = fs.readdirSync(eventsDir, { withFileTypes: true });
+  const chainDirs = fs.readdirSync(eventsDir, { withFileTypes: true });
 
-  for (const eventFile of eventFiles) {
-    if (!eventFile.isFile() || !eventFile.name.endsWith(".json")) continue;
+  for (const chainDir of chainDirs) {
+    if (!chainDir.isDirectory()) continue;
 
-    const filePath = path.join(eventsDir, eventFile.name);
+    const chainPath = path.join(eventsDir, chainDir.name);
+    const eventFiles = fs.readdirSync(chainPath, { withFileTypes: true });
 
-    try {
-      const content = JSON.parse(fs.readFileSync(filePath, "utf-8")) as Record<string, unknown>;
-      const isValid = validateEvent(content);
+    for (const eventFile of eventFiles) {
+      if (!eventFile.isFile() || !eventFile.name.endsWith(".json")) continue;
 
-      if (!isValid) {
-        results.push({
-          file: filePath,
-          valid: false,
-          errors: validateEvent.errors?.map(
-            (e) => `${e.instancePath} ${e.message}`
-          ),
-        });
-      } else {
-        // Additional validation: check topic0 hash format
-        const additionalErrors: string[] = [];
-        for (const topic0 of Object.keys(content)) {
-          if (!/^0x[a-f0-9]{64}$/.test(topic0)) {
-            additionalErrors.push(
-              `Invalid topic0 hash format: ${topic0}`
-            );
-          }
-        }
+      const filePath = path.join(chainPath, eventFile.name);
 
-        if (additionalErrors.length > 0) {
+      try {
+        const content = JSON.parse(fs.readFileSync(filePath, "utf-8")) as Record<string, unknown>;
+        const isValid = validateEvent(content);
+
+        if (!isValid) {
           results.push({
             file: filePath,
             valid: false,
-            errors: additionalErrors,
+            errors: validateEvent.errors?.map(
+              (e) => `${e.instancePath} ${e.message}`
+            ),
           });
         } else {
-          results.push({ file: filePath, valid: true });
+          // Additional validation: check topic0 hash format
+          const additionalErrors: string[] = [];
+          for (const topic0 of Object.keys(content)) {
+            if (!/^0x[a-f0-9]{64}$/.test(topic0)) {
+              additionalErrors.push(
+                `Invalid topic0 hash format: ${topic0}`
+              );
+            }
+          }
+
+          if (additionalErrors.length > 0) {
+            results.push({
+              file: filePath,
+              valid: false,
+              errors: additionalErrors,
+            });
+          } else {
+            results.push({ file: filePath, valid: true });
+          }
         }
+      } catch (e) {
+        results.push({
+          file: filePath,
+          valid: false,
+          errors: [`Failed to parse JSON: ${e}`],
+        });
       }
-    } catch (e) {
-      results.push({
-        file: filePath,
-        valid: false,
-        errors: [`Failed to parse JSON: ${e}`],
-      });
     }
   }
 }
