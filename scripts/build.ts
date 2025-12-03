@@ -299,15 +299,11 @@ function buildApps(): number {
 }
 
 function buildOrganizations(): number {
-  const orgsFile = path.join(ROOT_DIR, "data/organizations.json");
-
-  if (!fs.existsSync(orgsFile)) return 0;
-
-  const content = JSON.parse(fs.readFileSync(orgsFile, "utf-8"));
-  const organizations = content.organizations || [];
+  const orgsDir = path.join(ROOT_DIR, "data/orgs");
+  const organizations = loadJsonFilesFromDir(orgsDir);
 
   // Sort by name
-  organizations.sort((a: Record<string, unknown>, b: Record<string, unknown>) => {
+  organizations.sort((a, b) => {
     const nameA = (a.name as string) || "";
     const nameB = (b.name as string) || "";
     return nameA.localeCompare(nameB);
@@ -326,6 +322,121 @@ function buildOrganizations(): number {
 
   console.log(`  Built organizations.json (${organizations.length} organizations)`);
   return organizations.length;
+}
+
+interface Subscription {
+  tier: number;
+  expiresAt: string;
+}
+
+interface Supporter {
+  id: string;
+  type: "token" | "network" | "app" | "organization";
+  chainId?: number;
+  name: string;
+  startedAt: string;
+  currentTier: number;
+  expiresAt: string;
+}
+
+function buildSupporters(): number {
+  const supporters: Supporter[] = [];
+
+  // Scan tokens for subscriptions
+  const tokensDir = path.join(ROOT_DIR, "data/tokens");
+  if (fs.existsSync(tokensDir)) {
+    const tokens = loadJsonFilesFromDir(tokensDir);
+    for (const token of tokens) {
+      if (token.subscription) {
+        const sub = token.subscription as Subscription;
+        supporters.push({
+          id: token.address as string,
+          type: "token",
+          chainId: token.chainId as number,
+          name: `${token.name} (${token.symbol})`,
+          startedAt: sub.expiresAt, // We don't have startedAt, use expiresAt as placeholder
+          currentTier: sub.tier,
+          expiresAt: sub.expiresAt,
+        });
+      }
+    }
+  }
+
+  // Scan networks for subscriptions
+  const networksFile = path.join(ROOT_DIR, "data/networks.json");
+  if (fs.existsSync(networksFile)) {
+    const content = JSON.parse(fs.readFileSync(networksFile, "utf-8"));
+    const networks = content.networks || [];
+    for (const network of networks) {
+      if (network.subscription) {
+        const sub = network.subscription as Subscription;
+        supporters.push({
+          id: String(network.chainId),
+          type: "network",
+          chainId: network.chainId,
+          name: network.name,
+          startedAt: sub.expiresAt,
+          currentTier: sub.tier,
+          expiresAt: sub.expiresAt,
+        });
+      }
+    }
+  }
+
+  // Scan apps for subscriptions
+  const appsDir = path.join(ROOT_DIR, "data/apps");
+  if (fs.existsSync(appsDir)) {
+    const apps = loadJsonFilesFromDir(appsDir);
+    for (const app of apps) {
+      if (app.subscription) {
+        const sub = app.subscription as Subscription;
+        supporters.push({
+          id: app.id as string,
+          type: "app",
+          name: app.name as string,
+          startedAt: sub.expiresAt,
+          currentTier: sub.tier,
+          expiresAt: sub.expiresAt,
+        });
+      }
+    }
+  }
+
+  // Scan organizations for subscriptions
+  const orgsDir = path.join(ROOT_DIR, "data/orgs");
+  if (fs.existsSync(orgsDir)) {
+    const orgs = loadJsonFilesFromDir(orgsDir);
+    for (const org of orgs) {
+      if (org.subscription) {
+        const sub = org.subscription as Subscription;
+        supporters.push({
+          id: org.id as string,
+          type: "organization",
+          name: org.name as string,
+          startedAt: sub.expiresAt,
+          currentTier: sub.tier,
+          expiresAt: sub.expiresAt,
+        });
+      }
+    }
+  }
+
+  // Sort by name
+  supporters.sort((a, b) => a.name.localeCompare(b.name));
+
+  const output = {
+    updatedAt: new Date().toISOString(),
+    count: supporters.length,
+    supporters,
+  };
+
+  fs.writeFileSync(
+    path.join(DIST_DIR, "supporters.json"),
+    JSON.stringify(output, null, 2)
+  );
+
+  console.log(`  Built supporters.json (${supporters.length} supporters)`);
+  return supporters.length;
 }
 
 function copyProfiles(): void {
@@ -360,21 +471,10 @@ const tokenCount = buildTokens();
 const networkCount = buildNetworks();
 const appCount = buildApps();
 const orgCount = buildOrganizations();
+const supporterCount = buildSupporters();
 
-// Copy supporters and donations
-let supporterCount = 0;
+// Copy donations
 let donationCount = 0;
-
-const supportersFile = path.join(ROOT_DIR, "data/supporters.json");
-if (fs.existsSync(supportersFile)) {
-  const content = JSON.parse(fs.readFileSync(supportersFile, "utf-8"));
-  supporterCount = content.supporters?.length || 0;
-  fs.writeFileSync(
-    path.join(DIST_DIR, "supporters.json"),
-    JSON.stringify(content, null, 2)
-  );
-  console.log(`  Built supporters.json (${supporterCount} supporters)`);
-}
 
 const donationsFile = path.join(ROOT_DIR, "data/donations.json");
 if (fs.existsSync(donationsFile)) {

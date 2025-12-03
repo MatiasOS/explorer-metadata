@@ -16,7 +16,6 @@ explorer-metadata/
 │   ├── networks.json                      # All networks
 │   ├── apps/{id}.json                     # App metadata
 │   ├── orgs/{id}.json                     # Organization metadata
-│   ├── supporters.json                    # Supporters list
 │   └── donations.json                     # Donations list
 ├── profiles/
 │   ├── tokens/{chainId}/{address}.md      # Token profiles

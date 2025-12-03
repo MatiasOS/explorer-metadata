@@ -9,7 +9,12 @@
       "currency": "ETH",
       "color": "#627EEA",
       "isTestnet": false,
+      "subscription": {
+        "tier": 1,
+        "expiresAt": "2099-12-31"
+      },
       "logo": "assets/networks/1.svg",
+      "profile": "profiles/networks/1.md",
       "rpc": {
         "public": [
           "https://eth.llamarpc.com",
@@ -140,7 +145,12 @@
       "currency": "ETH",
       "color": "#4A4A4A",
       "isTestnet": true,
+      "subscription": {
+        "tier": 2,
+        "expiresAt": "2099-12-31"
+      },
       "logo": "assets/networks/31337.svg",
+      "profile": "profiles/networks/31337.md",
       "rpc": {
         "public": [
           "http://127.0.0.1:8545"

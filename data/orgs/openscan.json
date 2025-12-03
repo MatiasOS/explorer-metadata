@@ -3,6 +3,10 @@
   "name": "OpenScan",
   "type": "infrastructure",
   "description": "Open-source blockchain explorer and metadata repository for EVM networks",
+  "subscription": {
+    "tier": 3,
+    "expiresAt": "2099-12-31"
+  },
   "logo": "assets/organizations/openscan.svg",
   "profile": "profiles/organizations/openscan.md",
   "links": [
