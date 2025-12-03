@@ -1,0 +1,14 @@
+{
+  "id": "openscan",
+  "name": "OpenScan",
+  "type": "infrastructure",
+  "description": "Open-source blockchain explorer and metadata repository for EVM networks",
+  "logo": "assets/organizations/openscan.svg",
+  "profile": "profiles/organizations/openscan.md",
+  "links": [
+    { "name": "Website", "url": "https://openscan.io", "description": "Official OpenScan website" },
+    { "name": "GitHub", "url": "https://github.com/openscan-io", "description": "OpenScan GitHub" },
+    { "name": "Docs", "url": "https://docs.openscan.io", "description": "Documentation" },
+    { "name": "Twitter", "url": "https://twitter.com/openscan_io", "description": "OpenScan Twitter" }
+  ]
+}
