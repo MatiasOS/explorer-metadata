@@ -268,28 +268,47 @@ Verified addresses for apps and organizations are stored per chain in `data/addr
 Tiers are represented as integers:
 - **1 = Backer**: Entry-level support (base price)
 - **2 = Partner**: Enhanced benefits and visibility (3x Backer price)
-- **3 = Ally**: Full partnership with DAO participation (6x Backer price)
+- **3 = Ally**: Full partnership with direct team access (6x Backer price)
 
 ### Tokens
-- **Free**: Basic listing with address, name, symbol, decimals (verified contract required)
-- **Backer** ($500/mo): + Logo, links, project info, tags, allow events submission
-- **Partner** ($1,500/mo): + Balance shown in explorer, markdown profile 
-- **Ally** ($3,000/mo): + Roadmap voting power, custom explorer subdomain
 
-### Networks - Backer $2,000/month
-- **Backer** ($2,000/mo): Profile page, priority home page placement
-- **Partner** ($6,000/mo): + Custom subdomain explorer
-- **Ally** ($12,000/mo): + Roadmap voting power, network-specific features
+Verified contracts tags, metadata integration, logo display, official links, and token balance fetcher integration.
 
-### Apps - Backer $1,000/month
-- **Backer** ($1,000/mo): Profile page, contract tagging, allow events submission
-- **Partner** ($3,000/mo): + Custom subdomain explorer 
-- **Ally** ($6,000/mo): + roadmap voting power, plugin integration
+| Tier | Monthly Rate | Key Benefits |
+|------|--------------|--------------|
+| **Backer** (Tier 1) | $500 | Token page with ERC20 details, project name, custom URLs. Verified and tagged contracts. |
+| **Partner** (Tier 2) | $1,500 (3x) | Token balance shown on main explorer. Simple profile page. |
+| **Ally** (Tier 3) | $3,000 (6x) | Complete profile page with markdown description. Direct communication with technical team. |
 
-### Organizations - Backer $500/month
-- **Backer** ($500/mo): Profile page, contract tagging, allow events submission
-- **Partner** ($1,500/mo): + + Custom subdomain explorer, direct tech support
-- **Ally** ($3,000/mo): + Roadmap voting power
+### Networks
+
+Full RPC methods support, dedicated technical maintenance, subdomain availability, and prominent branding.
+
+| Tier | Monthly Rate | Key Benefits |
+|------|--------------|--------------|
+| **Backer** (Tier 1) | $2,000 | Markdown profile on network page. Priority placement on home page. |
+| **Partner** (Tier 2) | $6,000 (3x) | Dedicated subdomain network explorer. Direct communication with technical team. |
+| **Ally** (Tier 3) | $12,000 (6x) | Roadmap voting power. Network-specific features in dedicated explorer. |
+
+### Apps
+
+Dedicated listing and verified branding for wallets, dApps, supplementary explorer tools, and exchanges.
+
+| Tier | Monthly Rate | Key Benefits |
+|------|--------------|--------------|
+| **Backer** (Tier 1) | $1,000 | Simple profile page. Important contracts verified and tagged. Contract events listing. |
+| **Partner** (Tier 2) | $3,000 (3x) | OpenScan subdomain. Complete profile page with markdown description. |
+| **Ally** (Tier 3) | $6,000 (6x) | Roadmap voting power. Direct communication with technical team. |
+
+### Organizations
+
+Formal recognition and visibility for infrastructure providers, venture funds, and other supporting entities.
+
+| Tier | Monthly Rate | Key Benefits |
+|------|--------------|--------------|
+| **Backer** (Tier 1) | $500 | Simple profile page. Important contracts verified and tagged. Contract events listing. |
+| **Partner** (Tier 2) | $1,500 (3x) | Complete profile page with markdown description. Direct communication with technical team. |
+| **Ally** (Tier 3) | $3,000 (6x) | OpenScan subdomain. Roadmap voting power. |
 
 ## Donations
 
