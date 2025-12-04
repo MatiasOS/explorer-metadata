@@ -3,6 +3,10 @@
   "name": "Hardhat",
   "type": "infrastructure",
   "description": "Ethereum development environment for compiling, deploying, testing, and debugging smart contracts",
+  "subscription": {
+    "tier": 2,
+    "expiresAt": "2099-12-31"
+  },
   "logo": "assets/organizations/hardhat.svg",
   "profile": "profiles/organizations/hardhat.md",
   "links": [

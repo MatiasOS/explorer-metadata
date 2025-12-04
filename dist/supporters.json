@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2025-12-04T19:29:58.344Z",
-  "count": 6,
+  "updatedAt": "2025-12-04T19:35:04.772Z",
+  "count": 7,
   "supporters": [
     {
       "id": "1",
@@ -9,6 +9,14 @@
       "name": "Ethereum Mainnet",
       "startedAt": "2099-12-31",
       "currentTier": 1,
+      "expiresAt": "2099-12-31"
+    },
+    {
+      "id": "hardhat",
+      "type": "organization",
+      "name": "Hardhat",
+      "startedAt": "2099-12-31",
+      "currentTier": 2,
       "expiresAt": "2099-12-31"
     },
     {
