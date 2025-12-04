@@ -1,16 +1,18 @@
 {
-  "address": "0x022e292b44b5a146f2e8ee36ff44d3dd863c915c",
-  "chainId": 31337,
-  "name": "Xeenus",
-  "symbol": "XEENUS",
+  "address": "0x2823589ae095d99bd64deea80b4690313e2fb519",
+  "chainId": 11155111,
+  "name": "Weenus",
+  "symbol": "WEENUS",
   "decimals": 18,
   "subscription": {
-    "tier": 1,
+    "tier": 3,
     "expiresAt": "2099-12-31"
   },
   "verified": true,
+  "logo": "assets/openscan.png",
+  "profile": "profiles/tokens/11155111/0x2823589ae095d99bd64deea80b4690313e2fb519.md",
   "project": {
-    "name": "Xeenus Token",
+    "name": "Weenus Token",
     "description": "Test ERC20 token for development and testing purposes"
   },
   "links": [
