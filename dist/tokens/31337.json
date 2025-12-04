@@ -1,0 +1,100 @@
+{
+  "chainId": 31337,
+  "updatedAt": "2025-12-04T14:26:22.341Z",
+  "count": 4,
+  "tokens": [
+    {
+      "address": "0x101848d5c5bbca18e6b4431eedf6b95e9adf82fa",
+      "chainId": 31337,
+      "name": "Weenus",
+      "symbol": "WEENUS",
+      "decimals": 18,
+      "subscription": {
+        "tier": 3,
+        "expiresAt": "2099-12-31"
+      },
+      "verified": true,
+      "profile": "profiles/tokens/31337/0x101848d5c5bbca18e6b4431eedf6b95e9adf82fa.md",
+      "project": {
+        "name": "Weenus Token",
+        "description": "Test ERC20 token for development and testing purposes on localhost networks"
+      },
+      "links": [
+        {
+          "name": "GitHub",
+          "url": "https://github.com/bokkypoobah/WeenusTokenFaucet",
+          "description": "Weenus Token Faucet repository"
+        }
+      ],
+      "tags": [
+        "testnet",
+        "faucet",
+        "development"
+      ]
+    },
+    {
+      "address": "0x022e292b44b5a146f2e8ee36ff44d3dd863c915c",
+      "chainId": 31337,
+      "name": "Xeenus",
+      "symbol": "XEENUS",
+      "decimals": 18,
+      "subscription": {
+        "tier": 1,
+        "expiresAt": "2099-12-31"
+      },
+      "verified": true,
+      "project": {
+        "name": "Xeenus Token",
+        "description": "Test ERC20 token for development and testing purposes"
+      },
+      "links": [
+        {
+          "name": "GitHub",
+          "url": "https://github.com/bokkypoobah/WeenusTokenFaucet",
+          "description": "Weenus Token Faucet repository"
+        }
+      ],
+      "tags": [
+        "testnet",
+        "faucet",
+        "development"
+      ]
+    },
+    {
+      "address": "0xc6fde3fd2cc2b173aec24cc3f267cb3cd78a26b7",
+      "chainId": 31337,
+      "name": "Yeenus",
+      "symbol": "YEENUS",
+      "decimals": 8,
+      "subscription": {
+        "tier": 2,
+        "expiresAt": "2099-12-31"
+      },
+      "verified": true,
+      "profile": "profiles/tokens/31337/0xc6fde3fd2cc2b173aec24cc3f267cb3cd78a26b7.md",
+      "project": {
+        "name": "Yeenus Token",
+        "description": "Test ERC20 token with 8 decimals for development and testing purposes"
+      },
+      "links": [
+        {
+          "name": "GitHub",
+          "url": "https://github.com/bokkypoobah/WeenusTokenFaucet",
+          "description": "Weenus Token Faucet repository"
+        }
+      ],
+      "tags": [
+        "testnet",
+        "faucet",
+        "development"
+      ]
+    },
+    {
+      "address": "0x1f9061b953bba0e36bf50f21876132dcf276fc6e",
+      "chainId": 31337,
+      "name": "Zeenus",
+      "symbol": "ZEENUS",
+      "decimals": 0
+    }
+  ]
+}

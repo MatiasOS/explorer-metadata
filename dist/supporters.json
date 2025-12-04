@@ -1,0 +1,67 @@
+{
+  "updatedAt": "2025-12-04T14:26:22.352Z",
+  "count": 7,
+  "supporters": [
+    {
+      "id": "1",
+      "type": "network",
+      "chainId": 1,
+      "name": "Ethereum Mainnet",
+      "startedAt": "2099-12-31",
+      "currentTier": 1,
+      "expiresAt": "2099-12-31"
+    },
+    {
+      "id": "31337",
+      "type": "network",
+      "chainId": 31337,
+      "name": "Localhost",
+      "startedAt": "2099-12-31",
+      "currentTier": 2,
+      "expiresAt": "2099-12-31"
+    },
+    {
+      "id": "openscan",
+      "type": "app",
+      "name": "OpenScan",
+      "startedAt": "2099-12-31",
+      "currentTier": 3,
+      "expiresAt": "2099-12-31"
+    },
+    {
+      "id": "openscan",
+      "type": "organization",
+      "name": "OpenScan",
+      "startedAt": "2099-12-31",
+      "currentTier": 3,
+      "expiresAt": "2099-12-31"
+    },
+    {
+      "id": "0x101848d5c5bbca18e6b4431eedf6b95e9adf82fa",
+      "type": "token",
+      "chainId": 31337,
+      "name": "Weenus (WEENUS)",
+      "startedAt": "2099-12-31",
+      "currentTier": 3,
+      "expiresAt": "2099-12-31"
+    },
+    {
+      "id": "0x022e292b44b5a146f2e8ee36ff44d3dd863c915c",
+      "type": "token",
+      "chainId": 31337,
+      "name": "Xeenus (XEENUS)",
+      "startedAt": "2099-12-31",
+      "currentTier": 1,
+      "expiresAt": "2099-12-31"
+    },
+    {
+      "id": "0xc6fde3fd2cc2b173aec24cc3f267cb3cd78a26b7",
+      "type": "token",
+      "chainId": 31337,
+      "name": "Yeenus (YEENUS)",
+      "startedAt": "2099-12-31",
+      "currentTier": 2,
+      "expiresAt": "2099-12-31"
+    }
+  ]
+}
