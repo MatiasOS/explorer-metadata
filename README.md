@@ -375,35 +375,71 @@ npm run add-token
 
 ## API
 
-The built metadata is hosted at `https://metadata.openscan.io/`:
+The built metadata is available in the `dist/` folder on the `main` branch.
+
+### Distribution Structure
+
+```
+dist/
+├── tokens/{chainId}/
+│   ├── all.json                    # List of all tokens (basic info)
+│   └── {address}.json              # Individual token details
+├── addresses/{chainId}/
+│   ├── all.json                    # List of all addresses (basic info)
+│   └── {address}.json              # Individual address details
+├── events/{chainId}/
+│   ├── common.json                 # Common events (ERC20, etc.)
+│   └── {address}.json              # Address-specific events
+├── networks.json                   # All networks
+├── apps.json                       # All apps
+├── organizations.json              # All organizations
+├── supporters.json                 # All supporters
+├── donations.json                  # All donations
+├── manifest.json                   # Build metadata
+├── profiles/                       # Markdown profiles
+└── assets/                         # Images and logos
+```
+
+### Endpoints
+
+Base URL: `https://raw.githubusercontent.com/openscan-org/explorer-metadata/main/dist`
 
 ```bash
 # Get all networks
-curl https://metadata.openscan.io/networks.json
-
-# Get tokens for Ethereum
-curl https://metadata.openscan.io/tokens/1.json
+curl https://raw.githubusercontent.com/openscan-org/explorer-metadata/main/dist/networks.json
 
 # Get all apps
-curl https://metadata.openscan.io/apps.json
+curl https://raw.githubusercontent.com/openscan-org/explorer-metadata/main/dist/apps.json
 
 # Get supporters list
-curl https://metadata.openscan.io/supporters.json
+curl https://raw.githubusercontent.com/openscan-org/explorer-metadata/main/dist/supporters.json
 
 # Get donations list
-curl https://metadata.openscan.io/donations.json
+curl https://raw.githubusercontent.com/openscan-org/explorer-metadata/main/dist/donations.json
 
-# Get events for Ethereum
-curl https://metadata.openscan.io/events/1.json
+# Tokens - list all tokens on a network (basic info)
+curl https://raw.githubusercontent.com/openscan-org/explorer-metadata/main/dist/tokens/1/all.json
 
-# Get addresses for Ethereum
-curl https://metadata.openscan.io/addresses/1.json
+# Tokens - get specific token details
+curl https://raw.githubusercontent.com/openscan-org/explorer-metadata/main/dist/tokens/1/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.json
+
+# Addresses - list all addresses on a network
+curl https://raw.githubusercontent.com/openscan-org/explorer-metadata/main/dist/addresses/1/all.json
+
+# Addresses - get specific address details
+curl https://raw.githubusercontent.com/openscan-org/explorer-metadata/main/dist/addresses/1/0x7a250d5630b4cf539739df2c5dacb4c659f2488d.json
+
+# Events - get common events for a network
+curl https://raw.githubusercontent.com/openscan-org/explorer-metadata/main/dist/events/1/common.json
+
+# Events - get address-specific events
+curl https://raw.githubusercontent.com/openscan-org/explorer-metadata/main/dist/events/1/0x7a250d5630b4cf539739df2c5dacb4c659f2488d.json
 
 # Get a token profile
-curl https://metadata.openscan.io/profiles/tokens/1/0x....md
+curl https://raw.githubusercontent.com/openscan-org/explorer-metadata/main/dist/profiles/tokens/1/0x....md
 
 # Get a token logo
-curl https://metadata.openscan.io/assets/tokens/1/0x....png
+curl https://raw.githubusercontent.com/openscan-org/explorer-metadata/main/dist/assets/tokens/1/0x....png
 ```
 
 ## License
