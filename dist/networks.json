@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2025-12-04T19:26:07.838Z",
-  "count": 9,
+  "updatedAt": "2025-12-04T19:29:58.336Z",
+  "count": 8,
   "networks": [
     {
       "chainId": 1,
@@ -203,38 +203,6 @@
           "name": "Docs",
           "url": "https://docs.base.org",
           "description": "Developer documentation"
-        }
-      ]
-    },
-    {
-      "chainId": 31337,
-      "name": "Localhost",
-      "shortName": "Localhost",
-      "description": "Local development network (Hardhat/Anvil)",
-      "currency": "ETH",
-      "color": "#4A4A4A",
-      "isTestnet": true,
-      "subscription": {
-        "tier": 2,
-        "expiresAt": "2099-12-31"
-      },
-      "logo": "assets/networks/31337.svg",
-      "profile": "profiles/networks/31337.md",
-      "rpc": {
-        "public": [
-          "http://127.0.0.1:8545"
-        ]
-      },
-      "links": [
-        {
-          "name": "Hardhat",
-          "url": "https://hardhat.org",
-          "description": "Hardhat development environment"
-        },
-        {
-          "name": "Foundry",
-          "url": "https://getfoundry.sh",
-          "description": "Foundry development toolkit"
         }
       ]
     },
