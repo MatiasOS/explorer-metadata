@@ -285,13 +285,6 @@ function buildNetworks(): number {
   const content = JSON.parse(fs.readFileSync(networksFile, "utf-8"));
   const networks = content.networks || [];
 
-  // Sort by chainId
-  networks.sort((a: Record<string, unknown>, b: Record<string, unknown>) => {
-    const chainA = (a.chainId as number) || 0;
-    const chainB = (b.chainId as number) || 0;
-    return chainA - chainB;
-  });
-
   const output = {
     updatedAt: new Date().toISOString(),
     count: networks.length,
