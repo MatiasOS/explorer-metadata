@@ -29,93 +29,6 @@
       ]
     },
     {
-      "chainId": 10,
-      "name": "Optimism",
-      "shortName": "Optimism",
-      "description": "Ethereum Layer 2 scaling solution using optimistic rollups",
-      "currency": "ETH",
-      "color": "#FF0420",
-      "isTestnet": false,
-      "logo": "assets/networks/10.svg",
-      "rpc": {
-        "public": [
-          "https://mainnet.optimism.io",
-          "https://optimism.publicnode.com",
-          "https://rpc.ankr.com/optimism"
-        ]
-      },
-      "links": [
-        { "name": "Website", "url": "https://optimism.io", "description": "Official Optimism website" },
-        { "name": "Bridge", "url": "https://app.optimism.io/bridge", "description": "Bridge assets to Optimism" },
-        { "name": "Docs", "url": "https://docs.optimism.io", "description": "Developer documentation" }
-      ]
-    },
-    {
-      "chainId": 56,
-      "name": "BNB Smart Chain",
-      "shortName": "BSC",
-      "description": "EVM-compatible blockchain by Binance",
-      "currency": "BNB",
-      "color": "#F0B90B",
-      "isTestnet": false,
-      "logo": "assets/networks/56.svg",
-      "rpc": {
-        "public": [
-          "https://bsc-dataseed.binance.org",
-          "https://bsc.publicnode.com",
-          "https://rpc.ankr.com/bsc"
-        ]
-      },
-      "links": [
-        { "name": "Website", "url": "https://www.bnbchain.org", "description": "Official BNB Chain website" },
-        { "name": "Bridge", "url": "https://www.bnbchain.org/bridge", "description": "Bridge assets" },
-        { "name": "Docs", "url": "https://docs.bnbchain.org", "description": "Developer documentation" }
-      ]
-    },
-    {
-      "chainId": 97,
-      "name": "BNB Smart Chain Testnet",
-      "shortName": "BSC Testnet",
-      "description": "BNB Smart Chain testnet for developers",
-      "currency": "tBNB",
-      "color": "#F0B90B",
-      "isTestnet": true,
-      "logo": "assets/networks/97.svg",
-      "rpc": {
-        "public": [
-          "https://data-seed-prebsc-1-s1.binance.org:8545",
-          "https://bsc-testnet.publicnode.com",
-          "https://rpc.ankr.com/bsc_testnet_chapel"
-        ]
-      },
-      "links": [
-        { "name": "Faucet", "url": "https://testnet.bnbchain.org/faucet-smart", "description": "Get testnet BNB" },
-        { "name": "Docs", "url": "https://docs.bnbchain.org", "description": "Developer documentation" }
-      ]
-    },
-    {
-      "chainId": 137,
-      "name": "Polygon",
-      "shortName": "Polygon",
-      "description": "Ethereum sidechain with fast and low-cost transactions",
-      "currency": "POL",
-      "color": "#8247E5",
-      "isTestnet": false,
-      "logo": "assets/networks/137.svg",
-      "rpc": {
-        "public": [
-          "https://polygon-rpc.com",
-          "https://polygon-bor.publicnode.com",
-          "https://rpc.ankr.com/polygon"
-        ]
-      },
-      "links": [
-        { "name": "Website", "url": "https://polygon.technology", "description": "Official Polygon website" },
-        { "name": "Bridge", "url": "https://portal.polygon.technology/bridge", "description": "Bridge assets to Polygon" },
-        { "name": "Docs", "url": "https://docs.polygon.technology", "description": "Developer documentation" }
-      ]
-    },
-    {
       "chainId": 8453,
       "name": "Base",
       "shortName": "Base",
@@ -161,6 +74,72 @@
       ]
     },
     {
+      "chainId": 10,
+      "name": "Optimism",
+      "shortName": "Optimism",
+      "description": "Ethereum Layer 2 scaling solution using optimistic rollups",
+      "currency": "ETH",
+      "color": "#FF0420",
+      "isTestnet": false,
+      "logo": "assets/networks/10.svg",
+      "rpc": {
+        "public": [
+          "https://mainnet.optimism.io",
+          "https://optimism.publicnode.com",
+          "https://rpc.ankr.com/optimism"
+        ]
+      },
+      "links": [
+        { "name": "Website", "url": "https://optimism.io", "description": "Official Optimism website" },
+        { "name": "Bridge", "url": "https://app.optimism.io/bridge", "description": "Bridge assets to Optimism" },
+        { "name": "Docs", "url": "https://docs.optimism.io", "description": "Developer documentation" }
+      ]
+    },
+    {
+      "chainId": 56,
+      "name": "BNB Smart Chain",
+      "shortName": "BSC",
+      "description": "EVM-compatible blockchain by Binance",
+      "currency": "BNB",
+      "color": "#F0B90B",
+      "isTestnet": false,
+      "logo": "assets/networks/56.svg",
+      "rpc": {
+        "public": [
+          "https://bsc-dataseed.binance.org",
+          "https://bsc.publicnode.com",
+          "https://rpc.ankr.com/bsc"
+        ]
+      },
+      "links": [
+        { "name": "Website", "url": "https://www.bnbchain.org", "description": "Official BNB Chain website" },
+        { "name": "Bridge", "url": "https://www.bnbchain.org/bridge", "description": "Bridge assets" },
+        { "name": "Docs", "url": "https://docs.bnbchain.org", "description": "Developer documentation" }
+      ]
+    },
+    {
+      "chainId": 137,
+      "name": "Polygon",
+      "shortName": "Polygon",
+      "description": "Ethereum sidechain with fast and low-cost transactions",
+      "currency": "POL",
+      "color": "#8247E5",
+      "isTestnet": false,
+      "logo": "assets/networks/137.svg",
+      "rpc": {
+        "public": [
+          "https://polygon-rpc.com",
+          "https://polygon-bor.publicnode.com",
+          "https://rpc.ankr.com/polygon"
+        ]
+      },
+      "links": [
+        { "name": "Website", "url": "https://polygon.technology", "description": "Official Polygon website" },
+        { "name": "Bridge", "url": "https://portal.polygon.technology/bridge", "description": "Bridge assets to Polygon" },
+        { "name": "Docs", "url": "https://docs.polygon.technology", "description": "Developer documentation" }
+      ]
+    },
+    {
       "chainId": 11155111,
       "name": "Ethereum Sepolia",
       "shortName": "Sepolia",
@@ -179,6 +158,27 @@
       "links": [
         { "name": "Faucet", "url": "https://sepoliafaucet.com", "description": "Get testnet ETH" },
         { "name": "Docs", "url": "https://ethereum.org/developers", "description": "Ethereum developer docs" }
+      ]
+    },
+        {
+      "chainId": 97,
+      "name": "BNB Smart Chain Testnet",
+      "shortName": "BSC Testnet",
+      "description": "BNB Smart Chain testnet for developers",
+      "currency": "tBNB",
+      "color": "#F0B90B",
+      "isTestnet": true,
+      "logo": "assets/networks/97.svg",
+      "rpc": {
+        "public": [
+          "https://data-seed-prebsc-1-s1.binance.org:8545",
+          "https://bsc-testnet.publicnode.com",
+          "https://rpc.ankr.com/bsc_testnet_chapel"
+        ]
+      },
+      "links": [
+        { "name": "Faucet", "url": "https://testnet.bnbchain.org/faucet-smart", "description": "Get testnet BNB" },
+        { "name": "Docs", "url": "https://docs.bnbchain.org", "description": "Developer documentation" }
       ]
     }
   ]
