@@ -2,7 +2,8 @@
 	"updatedAt": "2025-12-01",
 	"networks": [
 		{
-			"chainId": 1,
+			"type": "evm",
+			"networkId": "eip155:1",
 			"name": "Ethereum Mainnet",
 			"shortName": "Ethereum",
 			"description": "The main Ethereum network - the original smart contract platform",
@@ -41,7 +42,8 @@
 			]
 		},
 		{
-			"chainId": 8453,
+			"type": "evm",
+			"networkId": "eip155:8453",
 			"name": "Base",
 			"shortName": "Base",
 			"description": "Ethereum Layer 2 built on the OP Stack by Coinbase",
@@ -75,7 +77,8 @@
 			]
 		},
 		{
-			"chainId": 42161,
+			"type": "evm",
+			"networkId": "eip155:42161",
 			"name": "Arbitrum One",
 			"shortName": "Arbitrum",
 			"description": "Ethereum Layer 2 scaling solution using optimistic rollups",
@@ -114,7 +117,8 @@
 			]
 		},
 		{
-			"chainId": 10,
+			"type": "evm",
+			"networkId": "eip155:10",
 			"name": "Optimism",
 			"shortName": "Optimism",
 			"description": "Ethereum Layer 2 scaling solution using optimistic rollups",
@@ -148,7 +152,8 @@
 			]
 		},
 		{
-			"chainId": 56,
+			"type": "evm",
+			"networkId": "eip155:56",
 			"name": "BNB Smart Chain",
 			"shortName": "BSC",
 			"description": "EVM-compatible blockchain by Binance",
@@ -182,7 +187,8 @@
 			]
 		},
 		{
-			"chainId": 137,
+			"type": "evm",
+			"networkId": "eip155:137",
 			"name": "Polygon",
 			"shortName": "Polygon",
 			"description": "Ethereum sidechain with fast and low-cost transactions",
@@ -216,7 +222,8 @@
 			]
 		},
 		{
-			"chainId": 11155111,
+			"type": "evm",
+			"networkId": "eip155:11155111",
 			"name": "Ethereum Sepolia",
 			"shortName": "Sepolia",
 			"description": "Ethereum testnet for developers",
@@ -245,7 +252,8 @@
 			]
 		},
 		{
-			"chainId": 97,
+			"type": "evm",
+			"networkId": "eip155:97",
 			"name": "BNB Smart Chain Testnet",
 			"shortName": "BSC Testnet",
 			"description": "BNB Smart Chain testnet for developers",
@@ -270,6 +278,34 @@
 					"name": "Docs",
 					"url": "https://docs.bnbchain.org",
 					"description": "Developer documentation"
+				}
+			]
+		},
+		{
+			"type": "bitcoin",
+			"networkId": "bip122:000000000019d6689c085ae165831e93",
+			"name": "Bitcoin Mainnet",
+			"shortName": "Bitcoin",
+			"description": "The original decentralized cryptocurrency network",
+			"currency": "BTC",
+			"color": "#F7931A",
+			"isTestnet": false,
+			"logo": "assets/networks/bitcoin-mainnet.svg",
+			"links": [
+				{
+					"name": "Website",
+					"url": "https://bitcoin.org",
+					"description": "Official Bitcoin website"
+				},
+				{
+					"name": "Whitepaper",
+					"url": "https://bitcoin.org/bitcoin.pdf",
+					"description": "Bitcoin whitepaper"
+				},
+				{
+					"name": "GitHub",
+					"url": "https://github.com/bitcoin/bitcoin",
+					"description": "Bitcoin Core repository"
 				}
 			]
 		}

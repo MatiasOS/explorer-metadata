@@ -7,7 +7,7 @@ import addFormats from "ajv-formats";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(__dirname, "..");
 
-const ajv = new Ajv({ allErrors: true, strict: true });
+const ajv = new Ajv({ allErrors: true, strict: true, strictRequired: false });
 addFormats(ajv);
 
 // Load schemas

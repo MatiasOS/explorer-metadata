@@ -375,7 +375,7 @@ interface Subscription {
 interface Supporter {
 	id: string;
 	type: "token" | "network" | "app" | "organization";
-	chainId?: number;
+	networkId?: string;
 	name: string;
 	startedAt: string;
 	currentTier: number;
@@ -395,7 +395,7 @@ function buildSupporters(): number {
 				supporters.push({
 					id: token.address as string,
 					type: "token",
-					chainId: token.chainId as number,
+					networkId: String(token.chainId),
 					name: `${token.name} (${token.symbol})`,
 					startedAt: sub.expiresAt, // We don't have startedAt, use expiresAt as placeholder
 					currentTier: sub.tier,
@@ -414,9 +414,9 @@ function buildSupporters(): number {
 			if (network.subscription) {
 				const sub = network.subscription as Subscription;
 				supporters.push({
-					id: String(network.chainId),
+					id: network.networkId,
 					type: "network",
-					chainId: network.chainId,
+					networkId: network.networkId,
 					name: network.name,
 					startedAt: sub.expiresAt,
 					currentTier: sub.tier,

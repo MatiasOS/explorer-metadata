@@ -4,11 +4,19 @@
 	"title": "Network",
 	"description": "Network metadata for OpenScan explorer",
 	"type": "object",
-	"required": ["chainId", "name", "shortName", "currency"],
+	"required": ["type", "networkId", "name", "shortName", "currency"],
 	"properties": {
-		"chainId": {
-			"type": "integer",
-			"description": "Unique chain identifier"
+		"type": {
+			"type": "string",
+			"enum": ["evm", "bitcoin"],
+			"description": "Network family type (evm for EVM-compatible chains, bitcoin for Bitcoin)"
+		},
+		"networkId": {
+			"type": "string",
+			"pattern": "^[a-z0-9-]{3,8}:[a-zA-Z0-9_-]{1,32}$",
+			"minLength": 5,
+			"maxLength": 41,
+			"description": "CAIP-2 chain identifier (e.g., 'eip155:1' for Ethereum, 'bip122:000000000019d6689c085ae165831e93' for Bitcoin)"
 		},
 		"name": {
 			"type": "string",
