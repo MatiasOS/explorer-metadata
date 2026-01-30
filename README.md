@@ -115,9 +115,14 @@ Tokens support **ERC20**, **ERC721** (NFTs), and **ERC1155** (Multi-Token) stand
 
 ### Network
 
+Networks are identified using [CAIP-2](https://github.com/ChainAgnostic/CAIPs/blob/main/CAIPs/caip-2.md) chain identifiers, enabling support for any blockchain ecosystem.
+
+#### EVM Network
+
 ```json
 {
-  "chainId": 42161,
+  "type": "evm",
+  "networkId": "eip155:42161",
   "name": "Arbitrum One",
   "shortName": "Arbitrum",
   "description": "Ethereum Layer 2 scaling solution",
@@ -140,6 +145,33 @@ Tokens support **ERC20**, **ERC721** (NFTs), and **ERC1155** (Multi-Token) stand
   ]
 }
 ```
+
+#### Non-EVM Network (Bitcoin)
+
+```json
+{
+  "type": "bitcoin",
+  "networkId": "bip122:000000000019d6689c085ae165831e93",
+  "name": "Bitcoin Mainnet",
+  "shortName": "Bitcoin",
+  "description": "The original decentralized cryptocurrency network",
+  "currency": "BTC",
+  "color": "#F7931A",
+  "isTestnet": false,
+  "logo": "assets/networks/bitcoin-mainnet.svg",
+  "links": [
+    { "name": "Website", "url": "https://bitcoin.org" },
+    { "name": "Whitepaper", "url": "https://bitcoin.org/bitcoin.pdf" }
+  ]
+}
+```
+
+#### CAIP-2 Network Identifiers
+
+| Network Type | Format | Example |
+|--------------|--------|---------|
+| EVM chains | `eip155:{chainId}` | `eip155:1` (Ethereum), `eip155:137` (Polygon) |
+| Bitcoin | `bip122:{genesisHash}` | `bip122:000000000019d6689c085ae165831e93` |
 
 ### App
 
@@ -197,7 +229,7 @@ Tokens support **ERC20**, **ERC721** (NFTs), and **ERC1155** (Multi-Token) stand
 {
   "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
   "type": "token",
-  "chainId": 1,
+  "networkId": "eip155:1",
   "name": "USD Coin (USDC)",
   "startedAt": "2025-01-01",
   "currentTier": 2,
