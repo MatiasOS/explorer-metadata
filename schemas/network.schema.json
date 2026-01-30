@@ -18,6 +18,10 @@
 			"maxLength": 41,
 			"description": "CAIP-2 chain identifier (e.g., 'eip155:1' for Ethereum, 'bip122:000000000019d6689c085ae165831e93' for Bitcoin)"
 		},
+		"chainId": {
+			"type": "integer",
+			"description": "EVM chain identifier (for backward compatibility with EVM networks)"
+		},
 		"name": {
 			"type": "string",
 			"minLength": 1,
