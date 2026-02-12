@@ -327,7 +327,11 @@ function buildRpcs(): number {
 	if (!fs.existsSync(rpcsDir)) return totalEndpoints;
 
 	const rpcFiles = fs.readdirSync(rpcsDir, { withFileTypes: true });
-	const allRpcs: { chainId: number; endpointCount: number }[] = [];
+	const allRpcs: {
+		chainId: number;
+		networkId?: string;
+		endpointCount: number;
+	}[] = [];
 
 	for (const rpcFile of rpcFiles) {
 		if (!rpcFile.isFile() || !rpcFile.name.endsWith(".json")) continue;
@@ -346,11 +350,13 @@ function buildRpcs(): number {
 
 			const endpointCount = content.endpoints?.length || 0;
 			totalEndpoints += endpointCount;
-			allRpcs.push({ chainId, endpointCount });
+			allRpcs.push({
+				chainId,
+				...(content.networkId && { networkId: content.networkId as string }),
+				endpointCount,
+			});
 
-			console.log(
-				`  Built rpcs/${chainId}.json (${endpointCount} endpoints)`,
-			);
+			console.log(`  Built rpcs/${chainId}.json (${endpointCount} endpoints)`);
 		} catch (e) {
 			console.warn(`Warning: Failed to parse ${srcPath}: ${e}`);
 		}
@@ -365,10 +371,7 @@ function buildRpcs(): number {
 			chains: allRpcs.sort((a, b) => a.chainId - b.chainId),
 		};
 
-		fs.writeFileSync(
-			path.join(distRpcsDir, "all.json"),
-			formatJson(summary),
-		);
+		fs.writeFileSync(path.join(distRpcsDir, "all.json"), formatJson(summary));
 	}
 
 	return totalEndpoints;

@@ -42,7 +42,7 @@ const addressSchema = JSON.parse(
 	fs.readFileSync(path.join(ROOT_DIR, "schemas/address.schema.json"), "utf-8"),
 );
 const rpcSchema = JSON.parse(
-  fs.readFileSync(path.join(ROOT_DIR, "schemas/rpc.schema.json"), "utf-8")
+	fs.readFileSync(path.join(ROOT_DIR, "schemas/rpc.schema.json"), "utf-8"),
 );
 
 const validateToken = ajv.compile(tokenSchema);
@@ -410,75 +410,101 @@ checkDuplicates();
 // Validate RPC files
 const rpcsDir = path.join(ROOT_DIR, "data/rpcs");
 if (fs.existsSync(rpcsDir)) {
-  const rpcFiles = fs.readdirSync(rpcsDir, { withFileTypes: true });
+	const rpcFiles = fs.readdirSync(rpcsDir, { withFileTypes: true });
 
-  for (const rpcFile of rpcFiles) {
-    if (!rpcFile.isFile() || !rpcFile.name.endsWith(".json")) continue;
+	for (const rpcFile of rpcFiles) {
+		if (!rpcFile.isFile() || !rpcFile.name.endsWith(".json")) continue;
 
-    const filePath = path.join(rpcsDir, rpcFile.name);
-    const expectedChainId = parseInt(rpcFile.name.replace(".json", ""), 10);
+		const filePath = path.join(rpcsDir, rpcFile.name);
+		const expectedChainId = Number.parseInt(
+			rpcFile.name.replace(".json", ""),
+			10,
+		);
 
-    try {
-      const content = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-      const isValid = validateRpc(content);
+		try {
+			const content = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+			const isValid = validateRpc(content);
 
-      if (!isValid) {
-        results.push({
-          file: filePath,
-          valid: false,
-          errors: validateRpc.errors?.map(
-            (e) => `${e.instancePath} ${e.message}`
-          ),
-        });
-      } else {
-        const additionalErrors: string[] = [];
+			if (!isValid) {
+				results.push({
+					file: filePath,
+					valid: false,
+					errors: validateRpc.errors?.map(
+						(e) => `${e.instancePath} ${e.message}`,
+					),
+				});
+			} else {
+				const additionalErrors: string[] = [];
 
-        // Check chainId matches filename
-        if (!isNaN(expectedChainId) && content.chainId !== expectedChainId) {
-          additionalErrors.push(
-            `chainId mismatch: file is ${rpcFile.name} but chainId is ${content.chainId}`
-          );
-        }
+				// Check chainId matches filename
+				if (
+					!Number.isNaN(expectedChainId) &&
+					content.chainId !== expectedChainId
+				) {
+					additionalErrors.push(
+						`chainId mismatch: file is ${rpcFile.name} but chainId is ${content.chainId}`,
+					);
+				}
 
-        // Check for duplicate URLs
-        const urls = new Set<string>();
-        for (const endpoint of content.endpoints || []) {
-          if (urls.has(endpoint.url)) {
-            additionalErrors.push(`Duplicate RPC URL: ${endpoint.url}`);
-          }
-          urls.add(endpoint.url);
-        }
+				// Validate networkId consistency: should match eip155:{chainId} for EVM chains
+				if (content.networkId) {
+					const expectedNetworkId = `eip155:${content.chainId}`;
+					if (content.networkId !== expectedNetworkId) {
+						additionalErrors.push(
+							`networkId mismatch: expected ${expectedNetworkId} but got ${content.networkId}`,
+						);
+					}
+				}
 
-        // Validate URL protocols
-        for (const endpoint of content.endpoints || []) {
-          const url = endpoint.url;
-          if (!url.startsWith("https://") && !url.startsWith("wss://") && !url.startsWith("http://")) {
-            additionalErrors.push(`Invalid URL protocol: ${url}`);
-          }
-          // WebSocket endpoints should use wss:// or ws://
-          if (endpoint.isWebSocket && !url.startsWith("wss://") && !url.startsWith("ws://")) {
-            additionalErrors.push(`WebSocket endpoint should use ws(s):// protocol: ${url}`);
-          }
-        }
+				// Check for duplicate URLs
+				const urls = new Set<string>();
+				for (const endpoint of content.endpoints || []) {
+					if (urls.has(endpoint.url)) {
+						additionalErrors.push(`Duplicate RPC URL: ${endpoint.url}`);
+					}
+					urls.add(endpoint.url);
+				}
 
-        if (additionalErrors.length > 0) {
-          results.push({
-            file: filePath,
-            valid: false,
-            errors: additionalErrors,
-          });
-        } else {
-          results.push({ file: filePath, valid: true });
-        }
-      }
-    } catch (e) {
-      results.push({
-        file: filePath,
-        valid: false,
-        errors: [`Failed to parse JSON: ${e}`],
-      });
-    }
-  }
+				// Validate URL protocols
+				for (const endpoint of content.endpoints || []) {
+					const url = endpoint.url;
+					if (
+						!url.startsWith("https://") &&
+						!url.startsWith("wss://") &&
+						!url.startsWith("http://")
+					) {
+						additionalErrors.push(`Invalid URL protocol: ${url}`);
+					}
+					// WebSocket endpoints should use wss:// or ws://
+					if (
+						endpoint.isWebSocket &&
+						!url.startsWith("wss://") &&
+						!url.startsWith("ws://")
+					) {
+						additionalErrors.push(
+							`WebSocket endpoint should use ws(s):// protocol: ${url}`,
+						);
+					}
+				}
+
+				if (additionalErrors.length > 0) {
+					results.push({
+						file: filePath,
+						valid: false,
+						errors: additionalErrors,
+					});
+				} else {
+					results.push({ file: filePath, valid: true });
+				}
+			}
+		} catch (e) {
+			results.push({
+				file: filePath,
+				valid: false,
+				errors: [`Failed to parse JSON: ${e}`],
+			});
+		}
+	}
 }
 
 // Validate events files
