@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(__dirname, "..");
-const RPCS_DIR = path.join(ROOT_DIR, "data/rpcs");
+const RPCS_DIR = path.join(ROOT_DIR, "data/rpcs/evm");
 const NETWORKS_FILE = path.join(ROOT_DIR, "data/networks.json");
 
 interface NetworkEntry {

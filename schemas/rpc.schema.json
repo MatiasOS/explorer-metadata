@@ -4,16 +4,16 @@
 	"title": "RPC Endpoints",
 	"description": "RPC endpoint metadata for blockchain networks. Each file contains endpoints for a single chain, including privacy tracking information and provider details.",
 	"type": "object",
-	"required": ["chainId", "endpoints"],
+	"required": ["networkId", "endpoints"],
 	"properties": {
 		"chainId": {
 			"type": "integer",
-			"description": "Chain ID this RPC configuration belongs to"
+			"description": "EVM chain ID (only for EVM networks, for backward compatibility)"
 		},
 		"networkId": {
 			"type": "string",
 			"pattern": "^[a-z0-9]+:[a-zA-Z0-9]+$",
-			"description": "CAIP-2 network identifier (e.g., 'eip155:1' for Ethereum mainnet)"
+			"description": "CAIP-2 network identifier (e.g., 'eip155:1' for Ethereum, 'bip122:000000000019d6689c085ae165831e93' for Bitcoin)"
 		},
 		"updatedAt": {
 			"type": "string",
