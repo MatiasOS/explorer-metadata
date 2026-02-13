@@ -10,14 +10,15 @@ OpenScan Metadata is a community-driven metadata repository for the OpenScan blo
 
 ```
 explorer-metadata/
-├── data/                    # JSON metadata files
-│   ├── tokens/{chainId}/    # Token metadata per chain
-│   ├── addresses/{chainId}/ # Verified addresses per chain
-│   ├── events/{chainId}/    # Event signatures per chain
-│   ├── networks.json        # All networks
-│   ├── apps/{id}.json       # App metadata
-│   ├── orgs/{id}.json       # Organization metadata
-│   └── donations.json       # Donations list
+├── data/                                # JSON metadata files
+│   ├── tokens/{networkType}/{id}/       # Token metadata per chain
+│   ├── addresses/{networkType}/{id}/    # Verified addresses per chain
+│   ├── events/{networkType}/{id}/       # Event signatures per chain
+│   ├── rpcs/{networkType}/              # RPC endpoint metadata
+│   ├── networks.json                    # All networks
+│   ├── apps/{id}.json                   # App metadata
+│   ├── orgs/{id}.json                   # Organization metadata
+│   └── donations.json                   # Donations list
 ├── profiles/                # Markdown profile pages
 │   ├── tokens/{chainId}/    # Token profiles
 │   ├── apps/                # App profiles
