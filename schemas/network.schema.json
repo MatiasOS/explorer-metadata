@@ -101,19 +101,6 @@
 				}
 			}
 		},
-		"rpc": {
-			"type": "object",
-			"properties": {
-				"public": {
-					"type": "array",
-					"items": {
-						"type": "string",
-						"format": "uri"
-					},
-					"description": "Public RPC endpoints"
-				}
-			}
-		},
 		"links": {
 			"type": "array",
 			"items": {
