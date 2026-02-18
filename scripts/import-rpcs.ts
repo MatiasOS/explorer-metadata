@@ -157,7 +157,6 @@ async function importFromChainlist(): Promise<void> {
 
 		const networkId = `eip155:${chainId}`;
 		const output = {
-			chainId,
 			networkId,
 			updatedAt: new Date().toISOString().split("T")[0],
 			endpoints,

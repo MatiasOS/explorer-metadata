@@ -6,10 +6,6 @@
 	"type": "object",
 	"required": ["networkId", "endpoints"],
 	"properties": {
-		"chainId": {
-			"type": "integer",
-			"description": "EVM chain ID (only for EVM networks, for backward compatibility)"
-		},
 		"networkId": {
 			"type": "string",
 			"pattern": "^[a-z0-9]+:[a-zA-Z0-9]+$",

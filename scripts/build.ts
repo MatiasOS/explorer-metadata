@@ -353,7 +353,6 @@ function buildRpcs(): number {
 	const networkTypeDirs = fs.readdirSync(rpcsDir, { withFileTypes: true });
 	const allRpcs: {
 		networkId: string;
-		chainId?: number;
 		endpointCount: number;
 	}[] = [];
 
@@ -383,18 +382,13 @@ function buildRpcs(): number {
 
 				const endpointCount = content.endpoints?.length || 0;
 				totalEndpoints += endpointCount;
-				allRpcs.push({
-					networkId: content.networkId as string,
-					...(content.chainId !== undefined && {
-						chainId: content.chainId as number,
-					}),
-					endpointCount,
-				});
+				const networkId = content.networkId as string;
+				allRpcs.push({ networkId, endpointCount });
 
-				const label =
-					content.chainId !== undefined
-						? `rpcs/${networkType}/${rpcFile.name} (chain ${content.chainId}, ${endpointCount} endpoints)`
-						: `rpcs/${networkType}/${rpcFile.name} (${endpointCount} endpoints)`;
+				const chainIdMatch = networkId.match(/^eip155:(\d+)$/);
+				const label = chainIdMatch
+					? `rpcs/${networkType}/${rpcFile.name} (chain ${chainIdMatch[1]}, ${endpointCount} endpoints)`
+					: `rpcs/${networkType}/${rpcFile.name} (${endpointCount} endpoints)`;
 				console.log(`  Built ${label}`);
 			} catch (e) {
 				console.warn(`Warning: Failed to parse ${srcPath}: ${e}`);

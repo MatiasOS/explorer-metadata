@@ -1,5 +1,4 @@
 {
-	"chainId": 42161,
 	"networkId": "eip155:42161",
 	"updatedAt": "2025-12-29",
 	"endpoints": [

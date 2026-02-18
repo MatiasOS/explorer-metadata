@@ -456,25 +456,28 @@ if (fs.existsSync(rpcsDir)) {
 					const additionalErrors: string[] = [];
 
 					if (networkType === "evm") {
-						// For EVM, check chainId matches filename
+						// For EVM, derive chainId from networkId and check it matches filename
 						const fileBaseName = rpcFile.name.replace(".json", "");
 						const expectedChainId = Number.parseInt(fileBaseName, 10);
-						if (
-							!Number.isNaN(expectedChainId) &&
-							content.chainId !== expectedChainId
-						) {
-							additionalErrors.push(
-								`chainId mismatch: file is ${rpcFile.name} but chainId is ${content.chainId}`,
-							);
-						}
 
-						// EVM chain: networkId should match eip155:{chainId}
-						if (content.networkId && content.chainId !== undefined) {
-							const expectedNetworkId = `eip155:${content.chainId}`;
-							if (content.networkId !== expectedNetworkId) {
+						if (content.networkId) {
+							const networkIdMatch = (content.networkId as string).match(
+								/^eip155:(\d+)$/,
+							);
+							if (!networkIdMatch) {
 								additionalErrors.push(
-									`networkId mismatch: expected ${expectedNetworkId} but got ${content.networkId}`,
+									`EVM networkId should match eip155:<chainId>, got ${content.networkId}`,
 								);
+							} else {
+								const derivedChainId = Number.parseInt(networkIdMatch[1], 10);
+								if (
+									!Number.isNaN(expectedChainId) &&
+									derivedChainId !== expectedChainId
+								) {
+									additionalErrors.push(
+										`networkId mismatch: file is ${rpcFile.name} but networkId implies chain ${derivedChainId}`,
+									);
+								}
 							}
 						}
 					} else if (networkType === "btc") {
