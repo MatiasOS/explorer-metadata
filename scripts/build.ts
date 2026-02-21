@@ -12,6 +12,7 @@ interface BuildManifest {
 	counts: {
 		tokens: number;
 		networks: number;
+		rpcs: number;
 		apps: number;
 		organizations: number;
 		supporters: number;
@@ -84,71 +85,79 @@ function buildAddresses(): number {
 
 	if (!fs.existsSync(addressesDir)) return totalAddresses;
 
-	const chainDirs = fs.readdirSync(addressesDir, { withFileTypes: true });
+	const networkTypeDirs = fs.readdirSync(addressesDir, {
+		withFileTypes: true,
+	});
 
-	for (const chainDir of chainDirs) {
-		if (!chainDir.isDirectory()) continue;
+	for (const networkTypeDir of networkTypeDirs) {
+		if (!networkTypeDir.isDirectory()) continue;
 
-		const chainId = Number.parseInt(chainDir.name, 10);
-		if (Number.isNaN(chainId)) continue;
+		const networkType = networkTypeDir.name;
+		const networkTypePath = path.join(addressesDir, networkType);
+		const networkTypeDistDir = path.join(distAddressesDir, networkType);
+		ensureDir(networkTypeDistDir);
 
-		const chainPath = path.join(addressesDir, chainDir.name);
-		const chainDistDir = path.join(distAddressesDir, chainDir.name);
-		ensureDir(chainDistDir);
+		const idDirs = fs.readdirSync(networkTypePath, { withFileTypes: true });
 
-		// Copy individual address files from data to dist
-		const addressFiles = fs.readdirSync(chainPath, { withFileTypes: true });
-		const basicAddresses: {
-			address: string;
-			label: string;
-			supporter?: string;
-		}[] = [];
+		for (const idDir of idDirs) {
+			if (!idDir.isDirectory()) continue;
 
-		for (const addressFile of addressFiles) {
-			if (!addressFile.isFile() || !addressFile.name.endsWith(".json"))
-				continue;
+			const idPath = path.join(networkTypePath, idDir.name);
+			const idDistDir = path.join(networkTypeDistDir, idDir.name);
+			ensureDir(idDistDir);
 
-			const srcPath = path.join(chainPath, addressFile.name);
-			const destPath = path.join(chainDistDir, addressFile.name.toLowerCase());
+			// Copy individual address files from data to dist
+			const addressFiles = fs.readdirSync(idPath, { withFileTypes: true });
+			const basicAddresses: {
+				address: string;
+				label: string;
+				supporter?: string;
+			}[] = [];
 
-			// Copy the file as-is
-			fs.copyFileSync(srcPath, destPath);
+			for (const addressFile of addressFiles) {
+				if (!addressFile.isFile() || !addressFile.name.endsWith(".json"))
+					continue;
 
-			// Parse for basic info
-			try {
-				const addr = JSON.parse(fs.readFileSync(srcPath, "utf-8"));
-				basicAddresses.push({
-					address: (addr.address as string).toLowerCase(),
-					label: addr.label as string,
-					...(addr.supporter && { supporter: addr.supporter as string }),
-				});
-			} catch (e) {
-				console.warn(`Warning: Failed to parse ${srcPath}: ${e}`);
+				const srcPath = path.join(idPath, addressFile.name);
+				const destPath = path.join(idDistDir, addressFile.name.toLowerCase());
+
+				// Copy the file as-is
+				fs.copyFileSync(srcPath, destPath);
+
+				// Parse for basic info
+				try {
+					const addr = JSON.parse(fs.readFileSync(srcPath, "utf-8"));
+					basicAddresses.push({
+						address: (addr.address as string).toLowerCase(),
+						label: addr.label as string,
+						...(addr.supporter && { supporter: addr.supporter as string }),
+					});
+				} catch (e) {
+					console.warn(`Warning: Failed to parse ${srcPath}: ${e}`);
+				}
 			}
+
+			if (basicAddresses.length === 0) continue;
+
+			// Sort by label
+			basicAddresses.sort((a, b) => a.label.localeCompare(b.label));
+
+			// Write all.json with basic address info
+			const chainId = Number.parseInt(idDir.name, 10);
+			const allOutput = {
+				...(networkType === "evm" && !Number.isNaN(chainId) && { chainId }),
+				updatedAt: new Date().toISOString(),
+				count: basicAddresses.length,
+				addresses: basicAddresses,
+			};
+
+			fs.writeFileSync(path.join(idDistDir, "all.json"), formatJson(allOutput));
+
+			totalAddresses += basicAddresses.length;
+			console.log(
+				`  Built addresses/${networkType}/${idDir.name}/ (${basicAddresses.length} addresses)`,
+			);
 		}
-
-		if (basicAddresses.length === 0) continue;
-
-		// Sort by label
-		basicAddresses.sort((a, b) => a.label.localeCompare(b.label));
-
-		// Write all.json with basic address info
-		const allOutput = {
-			chainId,
-			updatedAt: new Date().toISOString(),
-			count: basicAddresses.length,
-			addresses: basicAddresses,
-		};
-
-		fs.writeFileSync(
-			path.join(chainDistDir, "all.json"),
-			formatJson(allOutput),
-		);
-
-		totalAddresses += basicAddresses.length;
-		console.log(
-			`  Built addresses/${chainId}/ (${basicAddresses.length} addresses)`,
-		);
 	}
 
 	return totalAddresses;
@@ -163,54 +172,62 @@ function buildEvents(): number {
 
 	if (!fs.existsSync(eventsDir)) return totalEvents;
 
-	const chainDirs = fs.readdirSync(eventsDir, { withFileTypes: true });
+	const networkTypeDirs = fs.readdirSync(eventsDir, { withFileTypes: true });
 
-	for (const chainDir of chainDirs) {
-		if (!chainDir.isDirectory()) continue;
+	for (const networkTypeDir of networkTypeDirs) {
+		if (!networkTypeDir.isDirectory()) continue;
 
-		const chainId = Number.parseInt(chainDir.name, 10);
-		if (Number.isNaN(chainId)) continue;
+		const networkType = networkTypeDir.name;
+		const networkTypePath = path.join(eventsDir, networkType);
+		const networkTypeDistDir = path.join(distEventsDir, networkType);
+		ensureDir(networkTypeDistDir);
 
-		const chainPath = path.join(eventsDir, chainDir.name);
-		const chainDistDir = path.join(distEventsDir, chainDir.name);
-		ensureDir(chainDistDir);
+		const idDirs = fs.readdirSync(networkTypePath, { withFileTypes: true });
 
-		const eventFiles = fs.readdirSync(chainPath, { withFileTypes: true });
+		for (const idDir of idDirs) {
+			if (!idDir.isDirectory()) continue;
 
-		let commonCount = 0;
-		let addressCount = 0;
+			const idPath = path.join(networkTypePath, idDir.name);
+			const idDistDir = path.join(networkTypeDistDir, idDir.name);
+			ensureDir(idDistDir);
 
-		// Copy all event files from data to dist
-		for (const eventFile of eventFiles) {
-			if (!eventFile.isFile() || !eventFile.name.endsWith(".json")) continue;
+			const eventFiles = fs.readdirSync(idPath, { withFileTypes: true });
 
-			const srcPath = path.join(chainPath, eventFile.name);
-			const destPath = path.join(chainDistDir, eventFile.name.toLowerCase());
+			let commonCount = 0;
+			let addressCount = 0;
 
-			// Copy the file as-is
-			fs.copyFileSync(srcPath, destPath);
+			// Copy all event files from data to dist
+			for (const eventFile of eventFiles) {
+				if (!eventFile.isFile() || !eventFile.name.endsWith(".json")) continue;
 
-			// Count events
-			try {
-				const events = JSON.parse(fs.readFileSync(srcPath, "utf-8"));
-				const count = Object.keys(events).length;
-				if (eventFile.name === "common.json") {
-					commonCount = count;
-				} else {
-					addressCount += count;
+				const srcPath = path.join(idPath, eventFile.name);
+				const destPath = path.join(idDistDir, eventFile.name.toLowerCase());
+
+				// Copy the file as-is
+				fs.copyFileSync(srcPath, destPath);
+
+				// Count events
+				try {
+					const events = JSON.parse(fs.readFileSync(srcPath, "utf-8"));
+					const count = Object.keys(events).length;
+					if (eventFile.name === "common.json") {
+						commonCount = count;
+					} else {
+						addressCount += count;
+					}
+				} catch (e) {
+					console.warn(`Warning: Failed to parse ${srcPath}: ${e}`);
 				}
-			} catch (e) {
-				console.warn(`Warning: Failed to parse ${srcPath}: ${e}`);
 			}
+
+			const eventCount = commonCount + addressCount;
+			if (eventCount === 0) continue;
+
+			totalEvents += eventCount;
+			console.log(
+				`  Built events/${networkType}/${idDir.name}/ (${commonCount} common, ${addressCount} address-specific)`,
+			);
 		}
-
-		const eventCount = commonCount + addressCount;
-		if (eventCount === 0) continue;
-
-		totalEvents += eventCount;
-		console.log(
-			`  Built events/${chainId}/ (${commonCount} common, ${addressCount} address-specific)`,
-		);
 	}
 
 	return totalEvents;
@@ -225,72 +242,80 @@ function buildTokens(): number {
 
 	if (!fs.existsSync(tokensDir)) return totalTokens;
 
-	const chainDirs = fs.readdirSync(tokensDir, { withFileTypes: true });
+	const networkTypeDirs = fs.readdirSync(tokensDir, { withFileTypes: true });
 
-	for (const chainDir of chainDirs) {
-		if (!chainDir.isDirectory()) continue;
+	for (const networkTypeDir of networkTypeDirs) {
+		if (!networkTypeDir.isDirectory()) continue;
 
-		const chainId = Number.parseInt(chainDir.name, 10);
-		if (Number.isNaN(chainId)) continue;
+		const networkType = networkTypeDir.name;
+		const networkTypePath = path.join(tokensDir, networkType);
+		const networkTypeDistDir = path.join(distTokensDir, networkType);
+		ensureDir(networkTypeDistDir);
 
-		const chainPath = path.join(tokensDir, chainDir.name);
-		const chainDistDir = path.join(distTokensDir, chainDir.name);
-		ensureDir(chainDistDir);
+		const idDirs = fs.readdirSync(networkTypePath, { withFileTypes: true });
 
-		// Copy individual token files from data to dist
-		const tokenFiles = fs.readdirSync(chainPath, { withFileTypes: true });
-		const basicTokens: {
-			address: string;
-			name: string;
-			symbol: string;
-			decimals: number;
-			type?: string;
-		}[] = [];
+		for (const idDir of idDirs) {
+			if (!idDir.isDirectory()) continue;
 
-		for (const tokenFile of tokenFiles) {
-			if (!tokenFile.isFile() || !tokenFile.name.endsWith(".json")) continue;
+			const idPath = path.join(networkTypePath, idDir.name);
+			const idDistDir = path.join(networkTypeDistDir, idDir.name);
+			ensureDir(idDistDir);
 
-			const srcPath = path.join(chainPath, tokenFile.name);
-			const destPath = path.join(chainDistDir, tokenFile.name.toLowerCase());
+			// Copy individual token files from data to dist
+			const tokenFiles = fs.readdirSync(idPath, { withFileTypes: true });
+			const basicTokens: {
+				address: string;
+				name: string;
+				symbol: string;
+				decimals: number;
+				type?: string;
+			}[] = [];
 
-			// Copy the file as-is
-			fs.copyFileSync(srcPath, destPath);
+			for (const tokenFile of tokenFiles) {
+				if (!tokenFile.isFile() || !tokenFile.name.endsWith(".json")) continue;
 
-			// Parse for basic info
-			try {
-				const token = JSON.parse(fs.readFileSync(srcPath, "utf-8"));
-				basicTokens.push({
-					address: (token.address as string).toLowerCase(),
-					name: token.name as string,
-					symbol: token.symbol as string,
-					decimals: token.decimals as number,
-					...(token.type && { type: token.type as string }),
-				});
-			} catch (e) {
-				console.warn(`Warning: Failed to parse ${srcPath}: ${e}`);
+				const srcPath = path.join(idPath, tokenFile.name);
+				const destPath = path.join(idDistDir, tokenFile.name.toLowerCase());
+
+				// Copy the file as-is
+				fs.copyFileSync(srcPath, destPath);
+
+				// Parse for basic info
+				try {
+					const token = JSON.parse(fs.readFileSync(srcPath, "utf-8"));
+					basicTokens.push({
+						address: (token.address as string).toLowerCase(),
+						name: token.name as string,
+						symbol: token.symbol as string,
+						decimals: token.decimals as number,
+						...(token.type && { type: token.type as string }),
+					});
+				} catch (e) {
+					console.warn(`Warning: Failed to parse ${srcPath}: ${e}`);
+				}
 			}
+
+			if (basicTokens.length === 0) continue;
+
+			// Sort by name
+			basicTokens.sort((a, b) => a.name.localeCompare(b.name));
+
+			// Write all.json with basic token info
+			const chainId = Number.parseInt(idDir.name, 10);
+			const allOutput = {
+				...(networkType === "evm" && !Number.isNaN(chainId) && { chainId }),
+				updatedAt: new Date().toISOString(),
+				count: basicTokens.length,
+				tokens: basicTokens,
+			};
+
+			fs.writeFileSync(path.join(idDistDir, "all.json"), formatJson(allOutput));
+
+			totalTokens += basicTokens.length;
+			console.log(
+				`  Built tokens/${networkType}/${idDir.name}/ (${basicTokens.length} tokens)`,
+			);
 		}
-
-		if (basicTokens.length === 0) continue;
-
-		// Sort by name
-		basicTokens.sort((a, b) => a.name.localeCompare(b.name));
-
-		// Write all.json with basic token info
-		const allOutput = {
-			chainId,
-			updatedAt: new Date().toISOString(),
-			count: basicTokens.length,
-			tokens: basicTokens,
-		};
-
-		fs.writeFileSync(
-			path.join(chainDistDir, "all.json"),
-			formatJson(allOutput),
-		);
-
-		totalTokens += basicTokens.length;
-		console.log(`  Built tokens/${chainId}/ (${basicTokens.length} tokens)`);
 	}
 
 	return totalTokens;
@@ -314,6 +339,76 @@ function buildNetworks(): number {
 
 	console.log(`  Built networks.json (${networks.length} networks)`);
 	return networks.length;
+}
+
+function buildRpcs(): number {
+	const rpcsDir = path.join(ROOT_DIR, "data/rpcs");
+	const distRpcsDir = path.join(DIST_DIR, "rpcs");
+	ensureDir(distRpcsDir);
+
+	let totalEndpoints = 0;
+
+	if (!fs.existsSync(rpcsDir)) return totalEndpoints;
+
+	const networkTypeDirs = fs.readdirSync(rpcsDir, { withFileTypes: true });
+	const allRpcs: {
+		networkId: string;
+		endpointCount: number;
+	}[] = [];
+
+	for (const networkTypeDir of networkTypeDirs) {
+		if (!networkTypeDir.isDirectory()) continue;
+
+		const networkType = networkTypeDir.name;
+		const networkTypePath = path.join(rpcsDir, networkType);
+		const networkTypeDistDir = path.join(distRpcsDir, networkType);
+		ensureDir(networkTypeDistDir);
+
+		const rpcFiles = fs.readdirSync(networkTypePath, {
+			withFileTypes: true,
+		});
+
+		for (const rpcFile of rpcFiles) {
+			if (!rpcFile.isFile() || !rpcFile.name.endsWith(".json")) continue;
+
+			const srcPath = path.join(networkTypePath, rpcFile.name);
+			const destPath = path.join(networkTypeDistDir, rpcFile.name);
+
+			try {
+				const content = JSON.parse(fs.readFileSync(srcPath, "utf-8"));
+
+				// Copy individual RPC file
+				fs.copyFileSync(srcPath, destPath);
+
+				const endpointCount = content.endpoints?.length || 0;
+				totalEndpoints += endpointCount;
+				const networkId = content.networkId as string;
+				allRpcs.push({ networkId, endpointCount });
+
+				const chainIdMatch = networkId.match(/^eip155:(\d+)$/);
+				const label = chainIdMatch
+					? `rpcs/${networkType}/${rpcFile.name} (chain ${chainIdMatch[1]}, ${endpointCount} endpoints)`
+					: `rpcs/${networkType}/${rpcFile.name} (${endpointCount} endpoints)`;
+				console.log(`  Built ${label}`);
+			} catch (e) {
+				console.warn(`Warning: Failed to parse ${srcPath}: ${e}`);
+			}
+		}
+	}
+
+	// Write summary file
+	if (allRpcs.length > 0) {
+		const summary = {
+			updatedAt: new Date().toISOString(),
+			count: allRpcs.length,
+			totalEndpoints,
+			networks: allRpcs.sort((a, b) => a.networkId.localeCompare(b.networkId)),
+		};
+
+		fs.writeFileSync(path.join(distRpcsDir, "all.json"), formatJson(summary));
+	}
+
+	return totalEndpoints;
 }
 
 function buildApps(): number {
@@ -535,6 +630,7 @@ const addressCount = buildAddresses();
 const eventCount = buildEvents();
 const tokenCount = buildTokens();
 const networkCount = buildNetworks();
+const rpcCount = buildRpcs();
 const appCount = buildApps();
 const orgCount = buildOrganizations();
 const supporterCount = buildSupporters();
@@ -563,6 +659,7 @@ const manifest: BuildManifest = {
 	counts: {
 		tokens: tokenCount,
 		networks: networkCount,
+		rpcs: rpcCount,
 		apps: appCount,
 		organizations: orgCount,
 		supporters: supporterCount,
@@ -579,6 +676,7 @@ console.log(`  Addresses: ${addressCount}`);
 console.log(`  Events: ${eventCount}`);
 console.log(`  Tokens: ${tokenCount}`);
 console.log(`  Networks: ${networkCount}`);
+console.log(`  RPCs: ${rpcCount} endpoints`);
 console.log(`  Apps: ${appCount}`);
 console.log(`  Organizations: ${orgCount}`);
 console.log(`  Supporters: ${supporterCount}`);

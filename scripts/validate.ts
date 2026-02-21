@@ -41,6 +41,9 @@ const eventSchema = JSON.parse(
 const addressSchema = JSON.parse(
 	fs.readFileSync(path.join(ROOT_DIR, "schemas/address.schema.json"), "utf-8"),
 );
+const rpcSchema = JSON.parse(
+	fs.readFileSync(path.join(ROOT_DIR, "schemas/rpc.schema.json"), "utf-8"),
+);
 
 const validateToken = ajv.compile(tokenSchema);
 const validateNetwork = ajv.compile(networkSchema);
@@ -50,6 +53,7 @@ const validateSupporter = ajv.compile(supporterSchema);
 const validateDonation = ajv.compile(donationSchema);
 const validateEvent = ajv.compile(eventSchema);
 const validateAddress = ajv.compile(addressSchema);
+const validateRpc = ajv.compile(rpcSchema);
 
 interface ValidationResult {
 	file: string;
@@ -113,17 +117,22 @@ function validateJsonFiles(
 						}
 					}
 
-					// Check that chainId in filename matches content for tokens and addresses
+					// Check that chainId in filename matches content for EVM tokens and addresses
 					if (type === "token" || type === "address") {
 						const parentDir = path.basename(path.dirname(fullPath));
-						const expectedChainId = Number.parseInt(parentDir, 10);
-						if (
-							!Number.isNaN(expectedChainId) &&
-							content.chainId !== expectedChainId
-						) {
-							additionalErrors.push(
-								`chainId mismatch: file is in ${parentDir}/ but chainId is ${content.chainId}`,
-							);
+						const grandparentDir = path.basename(
+							path.dirname(path.dirname(fullPath)),
+						);
+						if (grandparentDir === "evm") {
+							const expectedChainId = Number.parseInt(parentDir, 10);
+							if (
+								!Number.isNaN(expectedChainId) &&
+								content.chainId !== expectedChainId
+							) {
+								additionalErrors.push(
+									`chainId mismatch: file is in ${parentDir}/ but chainId is ${content.chainId}`,
+								);
+							}
 						}
 					}
 
@@ -181,18 +190,27 @@ function checkDuplicates(): void {
 	// Check for duplicate token addresses per chain
 	const tokensDir = path.join(ROOT_DIR, "data/tokens");
 	if (fs.existsSync(tokensDir)) {
-		const chainDirs = fs.readdirSync(tokensDir, { withFileTypes: true });
+		const networkTypeDirs = fs.readdirSync(tokensDir, {
+			withFileTypes: true,
+		});
 
-		for (const chainDir of chainDirs) {
-			if (chainDir.isDirectory()) {
+		for (const networkTypeDir of networkTypeDirs) {
+			if (!networkTypeDir.isDirectory()) continue;
+
+			const networkTypePath = path.join(tokensDir, networkTypeDir.name);
+			const idDirs = fs.readdirSync(networkTypePath, {
+				withFileTypes: true,
+			});
+
+			for (const idDir of idDirs) {
+				if (!idDir.isDirectory()) continue;
+
 				const addresses = new Map<string, string>();
-				const chainPath = path.join(tokensDir, chainDir.name);
-				const files = fs
-					.readdirSync(chainPath)
-					.filter((f) => f.endsWith(".json"));
+				const idPath = path.join(networkTypePath, idDir.name);
+				const files = fs.readdirSync(idPath).filter((f) => f.endsWith(".json"));
 
 				for (const file of files) {
-					const filePath = path.join(chainPath, file);
+					const filePath = path.join(idPath, file);
 					try {
 						const content = JSON.parse(fs.readFileSync(filePath, "utf-8"));
 						const addr = content.address?.toLowerCase();
@@ -403,42 +421,102 @@ if (fs.existsSync(donationsFile)) {
 
 checkDuplicates();
 
-// Validate events files
-const eventsDir = path.join(ROOT_DIR, "data/events");
-if (fs.existsSync(eventsDir)) {
-	const chainDirs = fs.readdirSync(eventsDir, { withFileTypes: true });
+// Validate RPC files
+const rpcsDir = path.join(ROOT_DIR, "data/rpcs");
+if (fs.existsSync(rpcsDir)) {
+	const networkTypeDirs = fs.readdirSync(rpcsDir, { withFileTypes: true });
 
-	for (const chainDir of chainDirs) {
-		if (!chainDir.isDirectory()) continue;
+	for (const networkTypeDir of networkTypeDirs) {
+		if (!networkTypeDir.isDirectory()) continue;
 
-		const chainPath = path.join(eventsDir, chainDir.name);
-		const eventFiles = fs.readdirSync(chainPath, { withFileTypes: true });
+		const networkType = networkTypeDir.name;
+		const networkTypePath = path.join(rpcsDir, networkType);
+		const rpcFiles = fs.readdirSync(networkTypePath, {
+			withFileTypes: true,
+		});
 
-		for (const eventFile of eventFiles) {
-			if (!eventFile.isFile() || !eventFile.name.endsWith(".json")) continue;
+		for (const rpcFile of rpcFiles) {
+			if (!rpcFile.isFile() || !rpcFile.name.endsWith(".json")) continue;
 
-			const filePath = path.join(chainPath, eventFile.name);
+			const filePath = path.join(networkTypePath, rpcFile.name);
 
 			try {
-				const content = JSON.parse(
-					fs.readFileSync(filePath, "utf-8"),
-				) as Record<string, unknown>;
-				const isValid = validateEvent(content);
+				const content = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+				const isValid = validateRpc(content);
 
 				if (!isValid) {
 					results.push({
 						file: filePath,
 						valid: false,
-						errors: validateEvent.errors?.map(
+						errors: validateRpc.errors?.map(
 							(e) => `${e.instancePath} ${e.message}`,
 						),
 					});
 				} else {
-					// Additional validation: check topic0 hash format
 					const additionalErrors: string[] = [];
-					for (const topic0 of Object.keys(content)) {
-						if (!/^0x[a-f0-9]{64}$/.test(topic0)) {
-							additionalErrors.push(`Invalid topic0 hash format: ${topic0}`);
+
+					if (networkType === "evm") {
+						// For EVM, derive chainId from networkId and check it matches filename
+						const fileBaseName = rpcFile.name.replace(".json", "");
+						const expectedChainId = Number.parseInt(fileBaseName, 10);
+
+						if (content.networkId) {
+							const networkIdMatch = (content.networkId as string).match(
+								/^eip155:(\d+)$/,
+							);
+							if (!networkIdMatch) {
+								additionalErrors.push(
+									`EVM networkId should match eip155:<chainId>, got ${content.networkId}`,
+								);
+							} else {
+								const derivedChainId = Number.parseInt(networkIdMatch[1], 10);
+								if (
+									!Number.isNaN(expectedChainId) &&
+									derivedChainId !== expectedChainId
+								) {
+									additionalErrors.push(
+										`networkId mismatch: file is ${rpcFile.name} but networkId implies chain ${derivedChainId}`,
+									);
+								}
+							}
+						}
+					} else if (networkType === "btc") {
+						// BTC: networkId should start with bip122:
+						if (content.networkId && !content.networkId.startsWith("bip122:")) {
+							additionalErrors.push(
+								`networkId should start with bip122: for BTC, got ${content.networkId}`,
+							);
+						}
+					}
+
+					// Check for duplicate URLs
+					const urls = new Set<string>();
+					for (const endpoint of content.endpoints || []) {
+						if (urls.has(endpoint.url)) {
+							additionalErrors.push(`Duplicate RPC URL: ${endpoint.url}`);
+						}
+						urls.add(endpoint.url);
+					}
+
+					// Validate URL protocols
+					for (const endpoint of content.endpoints || []) {
+						const url = endpoint.url;
+						if (
+							!url.startsWith("https://") &&
+							!url.startsWith("wss://") &&
+							!url.startsWith("http://")
+						) {
+							additionalErrors.push(`Invalid URL protocol: ${url}`);
+						}
+						// WebSocket endpoints should use wss:// or ws://
+						if (
+							endpoint.isWebSocket &&
+							!url.startsWith("wss://") &&
+							!url.startsWith("ws://")
+						) {
+							additionalErrors.push(
+								`WebSocket endpoint should use ws(s):// protocol: ${url}`,
+							);
 						}
 					}
 
@@ -458,6 +536,75 @@ if (fs.existsSync(eventsDir)) {
 					valid: false,
 					errors: [`Failed to parse JSON: ${e}`],
 				});
+			}
+		}
+	}
+}
+
+// Validate events files
+const eventsDir = path.join(ROOT_DIR, "data/events");
+if (fs.existsSync(eventsDir)) {
+	const networkTypeDirsEvents = fs.readdirSync(eventsDir, {
+		withFileTypes: true,
+	});
+
+	for (const networkTypeDir of networkTypeDirsEvents) {
+		if (!networkTypeDir.isDirectory()) continue;
+
+		const networkTypePath = path.join(eventsDir, networkTypeDir.name);
+		const idDirs = fs.readdirSync(networkTypePath, { withFileTypes: true });
+
+		for (const idDir of idDirs) {
+			if (!idDir.isDirectory()) continue;
+
+			const idPath = path.join(networkTypePath, idDir.name);
+			const eventFiles = fs.readdirSync(idPath, { withFileTypes: true });
+
+			for (const eventFile of eventFiles) {
+				if (!eventFile.isFile() || !eventFile.name.endsWith(".json")) continue;
+
+				const filePath = path.join(idPath, eventFile.name);
+
+				try {
+					const content = JSON.parse(
+						fs.readFileSync(filePath, "utf-8"),
+					) as Record<string, unknown>;
+					const isValid = validateEvent(content);
+
+					if (!isValid) {
+						results.push({
+							file: filePath,
+							valid: false,
+							errors: validateEvent.errors?.map(
+								(e) => `${e.instancePath} ${e.message}`,
+							),
+						});
+					} else {
+						// Additional validation: check topic0 hash format
+						const additionalErrors: string[] = [];
+						for (const topic0 of Object.keys(content)) {
+							if (!/^0x[a-f0-9]{64}$/.test(topic0)) {
+								additionalErrors.push(`Invalid topic0 hash format: ${topic0}`);
+							}
+						}
+
+						if (additionalErrors.length > 0) {
+							results.push({
+								file: filePath,
+								valid: false,
+								errors: additionalErrors,
+							});
+						} else {
+							results.push({ file: filePath, valid: true });
+						}
+					}
+				} catch (e) {
+					results.push({
+						file: filePath,
+						valid: false,
+						errors: [`Failed to parse JSON: ${e}`],
+					});
+				}
 			}
 		}
 	}

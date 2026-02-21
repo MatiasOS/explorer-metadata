@@ -9,25 +9,28 @@ This repository contains verified metadata for tokens, networks, apps, organizat
 ```
 explorer-metadata/
 ├── data/
-│   ├── tokens/{chainId}/{address}.json    # Token metadata
-│   ├── addresses/{chainId}/{address}.json # Verified addresses per chain
-│   ├── events/{chainId}/common.json       # Common events (ERC20, etc.)
-│   ├── events/{chainId}/{address}.json    # Address-specific events
-│   ├── networks.json                      # All networks
-│   ├── apps/{id}.json                     # App metadata
-│   ├── orgs/{id}.json                     # Organization metadata
-│   └── donations.json                     # Donations list
+│   ├── tokens/{networkType}/{id}/{address}.json  # Token metadata
+│   ├── addresses/{networkType}/{id}/{addr}.json  # Verified addresses per chain
+│   ├── events/{networkType}/{id}/common.json     # Common events (ERC20, etc.)
+│   ├── events/{networkType}/{id}/{addr}.json     # Address-specific events
+│   ├── rpcs/{networkType}/{id}.json              # RPC endpoint metadata
+│   ├── networks.json                             # All networks
+│   ├── apps/{id}.json                            # App metadata
+│   ├── orgs/{id}.json                            # Organization metadata
+│   └── donations.json                            # Donations list
 ├── profiles/
-│   ├── tokens/{chainId}/{address}.md      # Token profiles
-│   ├── apps/{id}.md                       # App profiles
-│   └── organizations/{id}.md              # Organization profiles
+│   ├── tokens/{chainId}/{address}.md             # Token profiles
+│   ├── apps/{id}.md                              # App profiles
+│   └── organizations/{id}.md                     # Organization profiles
 ├── assets/
-│   ├── tokens/{chainId}/{address}.png     # Token logos (128x128)
-│   ├── networks/{chainId}.svg             # Network logos
-│   ├── apps/{id}.svg                      # App logos
-│   └── organizations/{id}.svg             # Organization logos
-└── schemas/                               # JSON Schema definitions
+│   ├── tokens/{chainId}/{address}.png            # Token logos (128x128)
+│   ├── networks/{chainId}.svg                    # Network logos
+│   ├── apps/{id}.svg                             # App logos
+│   └── organizations/{id}.svg                    # Organization logos
+└── schemas/                                      # JSON Schema definitions
 ```
+
+**Network types:** Data directories are organized by network type (`evm/`, `btc/`). EVM networks use chain IDs as identifiers (e.g., `evm/1/`), while Bitcoin networks use slugs (e.g., `btc/mainnet/`).
 
 ## Adding Metadata
 
@@ -255,7 +258,7 @@ Networks are identified using [CAIP-2](https://github.com/ChainAgnostic/CAIPs/bl
 
 ### Event
 
-Events are stored per chain with common events in `data/events/{chainId}/common.json` and address-specific events in `data/events/{chainId}/{address}.json`.
+Events are stored per chain with common events in `data/events/{networkType}/{id}/common.json` and address-specific events in `data/events/{networkType}/{id}/{address}.json`.
 
 #### Common Events (common.json)
 
@@ -293,7 +296,7 @@ Custom events for specific contracts (e.g., Uniswap V2 Router):
 
 ### Address
 
-Verified addresses for apps and organizations are stored per chain in `data/addresses/{chainId}/{address}.json`.
+Verified addresses for apps and organizations are stored per chain in `data/addresses/{networkType}/{id}/{address}.json`.
 
 ```json
 {
@@ -413,15 +416,19 @@ The built metadata is available in the `dist/` folder on the `main` branch.
 
 ```
 dist/
-├── tokens/{chainId}/
+├── tokens/{networkType}/{id}/
 │   ├── all.json                    # List of all tokens (basic info)
 │   └── {address}.json              # Individual token details
-├── addresses/{chainId}/
+├── addresses/{networkType}/{id}/
 │   ├── all.json                    # List of all addresses (basic info)
 │   └── {address}.json              # Individual address details
-├── events/{chainId}/
+├── events/{networkType}/{id}/
 │   ├── common.json                 # Common events (ERC20, etc.)
 │   └── {address}.json              # Address-specific events
+├── rpcs/
+│   ├── all.json                    # Summary of all RPC endpoints
+│   ├── evm/{chainId}.json          # RPC endpoints per EVM chain
+│   └── btc/{slug}.json             # RPC endpoints per Bitcoin network
 ├── networks.json                   # All networks
 ├── apps.json                       # All apps
 ├── organizations.json              # All organizations
@@ -451,23 +458,32 @@ curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/supporters.json
 # Get donations list
 curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/donations.json
 
-# Tokens - list all tokens on a network (basic info)
-curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/tokens/1/all.json
+# Tokens - list all tokens on an EVM network (basic info)
+curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/tokens/evm/1/all.json
 
 # Tokens - get specific token details
-curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/tokens/1/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.json
+curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/tokens/evm/1/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.json
 
-# Addresses - list all addresses on a network
-curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/addresses/1/all.json
+# Addresses - list all addresses on an EVM network
+curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/addresses/evm/1/all.json
 
 # Addresses - get specific address details
-curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/addresses/1/0x7a250d5630b4cf539739df2c5dacb4c659f2488d.json
+curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/addresses/evm/1/0x7a250d5630b4cf539739df2c5dacb4c659f2488d.json
 
-# Events - get common events for a network
-curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/events/1/common.json
+# Events - get common events for an EVM network
+curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/events/evm/1/common.json
 
 # Events - get address-specific events
-curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/events/1/0x7a250d5630b4cf539739df2c5dacb4c659f2488d.json
+curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/events/evm/1/0x7a250d5630b4cf539739df2c5dacb4c659f2488d.json
+
+# RPCs - get all RPC endpoint summaries
+curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/rpcs/all.json
+
+# RPCs - get endpoints for a specific EVM chain
+curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/rpcs/evm/1.json
+
+# RPCs - get endpoints for Bitcoin mainnet
+curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/rpcs/btc/mainnet.json
 
 # Get a token profile
 curl https://cdn.jsdelivr.net/npm/@openscan/metadata/dist/profiles/tokens/1/0x....md

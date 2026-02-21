@@ -1,0 +1,34 @@
+{
+	"networkId": "bip122:000000000019d6689c085ae165831e93",
+	"updatedAt": "2026-02-12",
+	"endpoints": [
+		{
+			"url": "https://mempool.space/api",
+			"tracking": "none",
+			"isOpenSource": true,
+			"provider": "Mempool.space",
+			"isPublic": true
+		},
+		{
+			"url": "https://blockstream.info/api",
+			"tracking": "limited",
+			"isOpenSource": true,
+			"provider": "Blockstream",
+			"isPublic": true
+		},
+		{
+			"url": "https://blockchain.info",
+			"tracking": "yes",
+			"isOpenSource": false,
+			"provider": "Blockchain.com",
+			"isPublic": true
+		},
+		{
+			"url": "https://btc.drpc.org",
+			"tracking": "none",
+			"isOpenSource": false,
+			"provider": "dRPC",
+			"isPublic": true
+		}
+	]
+}
