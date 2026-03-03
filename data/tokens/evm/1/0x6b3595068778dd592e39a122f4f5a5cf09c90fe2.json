@@ -4,5 +4,14 @@
 	"name": "SushiToken",
 	"symbol": "SUSHI",
 	"decimals": 18,
-	"source": ["openscan", "2026-03-03"]
+	"source": ["openscan", "2026-03-03"],
+	"project": {
+		"name": "SushiSwap: SUSHI Token"
+	},
+	"links": [
+		{
+			"name": "Website",
+			"url": "https://www.sushi.com/"
+		}
+	]
 }

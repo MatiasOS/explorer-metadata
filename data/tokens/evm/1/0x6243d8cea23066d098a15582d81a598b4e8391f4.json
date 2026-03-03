@@ -4,5 +4,14 @@
 	"name": "Flex",
 	"symbol": "FLEX",
 	"decimals": 18,
-	"source": ["openscan", "2026-03-03"]
+	"source": ["openscan", "2026-03-03"],
+	"project": {
+		"name": "Reflexer: FLX Token"
+	},
+	"links": [
+		{
+			"name": "Website",
+			"url": "https://reflexer.finance/"
+		}
+	]
 }

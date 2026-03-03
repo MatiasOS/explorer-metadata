@@ -4,5 +4,8 @@
 	"name": "PancakeSwap Token",
 	"symbol": "CAKE",
 	"decimals": 18,
-	"source": ["openscan", "2026-03-03"]
+	"source": ["openscan", "2026-03-03"],
+	"project": {
+		"name": "PancakeSwap"
+	}
 }

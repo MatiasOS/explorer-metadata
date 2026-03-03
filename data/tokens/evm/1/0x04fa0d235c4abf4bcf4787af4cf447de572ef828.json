@@ -4,5 +4,14 @@
 	"name": "UMA Voting Token v1",
 	"symbol": "UMA",
 	"decimals": 18,
-	"source": ["openscan", "2026-03-03"]
+	"source": ["openscan", "2026-03-03"],
+	"project": {
+		"name": "UMA: UMA Voting Token V1"
+	},
+	"links": [
+		{
+			"name": "Website",
+			"url": "https://umaproject.org/"
+		}
+	]
 }

@@ -4,5 +4,14 @@
 	"name": "Coinbase Wrapped Staked ETH",
 	"symbol": "cbETH",
 	"decimals": 18,
-	"source": ["openscan", "2026-03-03"]
+	"source": ["openscan", "2026-03-03"],
+	"project": {
+		"name": "Coinbase: cbETH Token"
+	},
+	"links": [
+		{
+			"name": "Website",
+			"url": "https://www.coinbase.com/"
+		}
+	]
 }

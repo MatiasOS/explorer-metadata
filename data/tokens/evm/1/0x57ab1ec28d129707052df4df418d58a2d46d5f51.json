@@ -4,5 +4,14 @@
 	"name": "Synth sUSD",
 	"symbol": "sUSD",
 	"decimals": 18,
-	"source": ["openscan", "2026-03-03"]
+	"source": ["openscan", "2026-03-03"],
+	"project": {
+		"name": "Synthetix: Proxy sUSD Token V2"
+	},
+	"links": [
+		{
+			"name": "Website",
+			"url": "https://synthetix.io/"
+		}
+	]
 }

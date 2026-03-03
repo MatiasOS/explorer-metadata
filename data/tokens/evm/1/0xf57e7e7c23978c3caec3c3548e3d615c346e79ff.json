@@ -4,5 +4,14 @@
 	"name": "Immutable X",
 	"symbol": "IMX",
 	"decimals": 18,
-	"source": ["openscan", "2026-03-03"]
+	"source": ["openscan", "2026-03-03"],
+	"project": {
+		"name": "IMMUTABLE X: IMX Token"
+	},
+	"links": [
+		{
+			"name": "Website",
+			"url": "https://www.immutable.com/"
+		}
+	]
 }

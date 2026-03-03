@@ -8,7 +8,7 @@ import { mainnet } from "viem/chains";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(__dirname, "..");
-const ZIP_PATH = path.join(ROOT_DIR, "external-sources/kleros-mainnet-v1.zip");
+const ZIP_PATH = path.join(ROOT_DIR, "external-sources/kleros-mainnet.zip");
 const ADDRESSES_DIR = path.join(ROOT_DIR, "data/addresses/evm/1");
 const TOKENS_DIR = path.join(ROOT_DIR, "data/tokens/evm/1");
 const RPC_FILE = path.join(ROOT_DIR, "data/rpcs/evm/1.json");

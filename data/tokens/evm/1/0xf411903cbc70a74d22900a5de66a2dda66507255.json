@@ -4,5 +4,14 @@
 	"name": "Verasity",
 	"symbol": "VRA",
 	"decimals": 18,
-	"source": ["openscan", "2026-03-03"]
+	"source": ["openscan", "2026-03-03"],
+	"project": {
+		"name": "Verasity: VRA Token V2"
+	},
+	"links": [
+		{
+			"name": "Website",
+			"url": "https://verasity.io/"
+		}
+	]
 }
