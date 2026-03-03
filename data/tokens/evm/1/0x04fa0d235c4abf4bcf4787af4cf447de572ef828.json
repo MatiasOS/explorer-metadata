@@ -3,5 +3,6 @@
 	"chainId": 1,
 	"name": "UMA Voting Token v1",
 	"symbol": "UMA",
-	"decimals": 18
+	"decimals": 18,
+	"source": ["openscan", "2026-03-03"]
 }

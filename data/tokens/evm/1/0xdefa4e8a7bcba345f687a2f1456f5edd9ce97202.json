@@ -3,5 +3,6 @@
 	"chainId": 1,
 	"name": "Kyber Network Crystal v2",
 	"symbol": "KNC",
-	"decimals": 18
+	"decimals": 18,
+	"source": ["openscan", "2026-03-03"]
 }

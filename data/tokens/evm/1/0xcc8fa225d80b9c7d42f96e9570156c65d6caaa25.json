@@ -3,5 +3,6 @@
 	"chainId": 1,
 	"name": "Smooth Love Potion",
 	"symbol": "SLP",
-	"decimals": 0
+	"decimals": 0,
+	"source": ["openscan", "2026-03-03"]
 }

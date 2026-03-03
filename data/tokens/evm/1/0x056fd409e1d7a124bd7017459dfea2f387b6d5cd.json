@@ -3,5 +3,6 @@
 	"chainId": 1,
 	"name": "Gemini Dollar",
 	"symbol": "GUSD",
-	"decimals": 2
+	"decimals": 2,
+	"source": ["openscan", "2026-03-03"]
 }
